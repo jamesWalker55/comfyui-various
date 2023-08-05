@@ -118,11 +118,6 @@ def generate_functional_node(
             def execute(self, *args, **kwargs):
                 return func(*args, **kwargs)
 
-        print(f"identifier = {identifier}")
-        print(f"display_name = {display_name}")
-        print(f"INPUT_TYPES = {required_inputs}")
-        print(f"RETURN_TYPES = {tuple(return_types)}")
-
         return func
 
     return decorator
