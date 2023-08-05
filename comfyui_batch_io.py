@@ -99,6 +99,7 @@ class BatchLoadImage:
 
         return (imgs, len(imgs), filenames)
 
+
 @register_node("BatchSaveImage", "Batch Save Image")
 class BatchSaveImage:
     CATEGORY = "jamesWalker55"
