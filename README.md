@@ -12,6 +12,7 @@ Each `comfyui_*.py` file contains a group of nodes of similar purpose. This repo
 
 Some files contain nodes for my own personal use, and are likely completely useless to anyone else. The following files should be skipped:
 
+- `comfyui_batch_io.py`
 - `comfyui_group_io.py`
 
 ## Installation
