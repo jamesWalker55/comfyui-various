@@ -222,17 +222,24 @@ class GroupLoadBatchImages:
     YAML structure:
 
     ```yaml
-    groups/
-        baseprompt.txt
-        g1/
-            0001.png
-            0002.png
-            subprompt.txt
-        g2/
-            0003.png
-            0004.png
-            subprompt.txt
-        ...
+    positive: |
+      {positive},
+      simple background, white background,
+
+    negative: |
+      {negative},
+      low quality,
+
+    image_pattern: '{frame_id:04d}.png'
+
+    groups:
+      - start_id: 1
+        positive: ...
+        negative: ...
+      - start_id: 5
+        positive: ...
+        negative: ...
+      ...
     ```
     """
 
