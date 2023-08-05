@@ -104,7 +104,7 @@ def generate_functional_node(
                 raise NotImplementedError(f"Unsupported return type: {annot}")
 
         @register_node(identifier, display_name)
-        class FuncNode:
+        class _:
             CATEGORY = category
 
             INPUT_TYPES = lambda: {"required": required_inputs}
