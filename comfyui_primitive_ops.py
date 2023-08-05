@@ -1,6 +1,7 @@
 import inspect
 import math
-
+import typing
+from typing import Literal
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
@@ -20,6 +21,8 @@ def generate_functional_node(
     category: str,
     identifier: str,
     display_name: str,
+    *,
+    multiline_string: bool = False,
     output_node: bool = False,
 ):
     def decorator(func):
@@ -61,13 +64,21 @@ def generate_functional_node(
 
                 required_inputs[name] = (
                     "STRING",
-                    {"default": param.default, "multiline": False},
+                    {"default": param.default, "multiline": multiline_string},
                 )
             elif isinstance(param_type, str):
                 if has_default:
                     raise TypeError("Custom input types cannot have default values")
 
                 required_inputs[name] = (param_type,)
+            elif typing.get_origin(param_type) is Literal:
+                choices = typing.get_args(param_type)
+                if param.default is not None:
+                    raise TypeError(
+                        "Choice input types must have default value set to None"
+                    )
+
+                required_inputs[name] = (choices,)
             else:
                 raise NotImplementedError(
                     f"Unsupported functional node type: {param_type}"
@@ -118,60 +129,115 @@ def generate_functional_node(
 
 
 @generate_functional_node("jamesWalker55", "JWInteger", "Integer")
-def integer_value(value: int = 0) -> (int,):
+def _(value: int = 0) -> (int,):
     return (value,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerToFloat", "Integer to Float")
-def integer_to_float(value: int = 0) -> (float,):
+def _(value: int = 0) -> (float,):
     return (float(value),)
 
 
+@generate_functional_node("jamesWalker55", "JWIntegerToString", "Integer to String")
+def _(
+    value: int = 0,
+    format_string: str = "{:04d}",
+) -> (str,):
+    return (format_string.format(value),)
+
+
 @generate_functional_node("jamesWalker55", "JWIntegerAdd", "Integer Add")
-def integer_sum(a: int = 0, b: int = 0) -> (int,):
+def _(a: int = 0, b: int = 0) -> (int,):
     return (a + b,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerSub", "Integer Subtract")
-def integer_sum(a: int = 0, b: int = 0) -> (int,):
+def _(a: int = 0, b: int = 0) -> (int,):
     return (a - b,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerMul", "Integer Multiply")
-def integer_sum(a: int = 0, b: int = 0) -> (int,):
+def _(a: int = 0, b: int = 0) -> (int,):
     return (a * b,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerDiv", "Integer Divide")
-def integer_sum(a: int = 0, b: int = 0) -> (float,):
+def _(a: int = 0, b: int = 0) -> (float,):
     return (a / b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloat", "Float")
-def float_value(value: float = 0) -> (float,):
+def _(value: float = 0) -> (float,):
     return (value,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatToInteger", "Float to Integer")
-def float_to_integer(value: float = 0) -> (int,):
-    return (round(value),)
+def _(value: float = 0, mode: Literal["round", "floor", "ceiling"] = None) -> (int,):
+    if mode == "round":
+        return (round(value),)
+    elif mode == "floor":
+        return (math.floor(value),)
+    elif mode == "ceiling":
+        return (math.ceil(value),)
+    else:
+        raise NotImplementedError(f"Unsupported mode: {mode}")
+
+
+@generate_functional_node("jamesWalker55", "JWFloatToString", "Float to String")
+def _(
+    value: int = 0,
+    format_string: str = "{:.6g}",
+) -> (str,):
+    return (format_string.format(value),)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatAdd", "Float Add")
-def float_sum(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> (float,):
     return (a + b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatSub", "Float Subtract")
-def float_sum(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> (float,):
     return (a - b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatMul", "Float Multiply")
-def float_sum(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> (float,):
     return (a * b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatDiv", "Float Divide")
-def float_sum(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> (float,):
     return (a / b,)
+
+
+@generate_functional_node("jamesWalker55", "JWString", "String")
+def _(text: str = "") -> (str,):
+    return (text,)
+
+
+@generate_functional_node("jamesWalker55", "JWStringToInteger", "String to Integer")
+def _(text: str = "0") -> (int,):
+    return (int(text),)
+
+
+@generate_functional_node("jamesWalker55", "JWStringToFloat", "String to Float")
+def _(text: str = "0.0") -> (float,):
+    return (float(text),)
+
+
+@generate_functional_node(
+    "jamesWalker55", "JWStringMultiline", "String (Multiline)", multiline_string=True
+)
+def _(text: str = "") -> (str,):
+    return (text,)
+
+
+@generate_functional_node("jamesWalker55", "JWStringConcat", "String Concatenate")
+def _(a: str = "", b: str = "") -> (str,):
+    return (a + b,)
+
+
+@generate_functional_node("jamesWalker55", "JWStringReplace", "String Replace")
+def _(source: str = "", to_replace: str = "", replace_with: str = "") -> (str,):
+    return (source.replace(to_replace, replace_with),)
