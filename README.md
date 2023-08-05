@@ -6,15 +6,6 @@ The nodes are grouped into separate files, you can just download the specific fi
 
 **Note:** This repo also contains nodes for my own personal use, **these nodes are very likely useless to anyone else so I recommend skipping those files**. See [Available Nodes] for more details.
 
-## Available Nodes
-
-Each `comfyui_*.py` file contains a group of nodes of similar purpose. This repo is still in early stages so I can't write documentation for each file yet - have a look at the code for each file to see what they are for.
-
-Some files contain nodes for my own personal use, and are likely completely useless to anyone else. The following files should be skipped:
-
-- `comfyui_batch_io.py`
-- `comfyui_group_io.py`
-
 ## Installation
 
 ### Method 1 (Recommended): Download each file individually
@@ -35,3 +26,44 @@ The loaded nodes are controlled by the `__init__.py` file, I will change this fi
 cd ComfyUI/custom_nodes
 git clone https://github.com/jamesWalker55/comfyui-various
 ```
+
+## Available Nodes
+
+Each `comfyui_*.py` file contains a group of nodes of similar purpose. This repo is still in early stages so I can't write documentation for each file yet - have a look at the code for each file to see what they are for.
+
+**`comfyui_primitive_ops.py`**:
+
+```
+JWInteger: Integer
+JWIntegerToFloat: Integer to Float
+JWIntegerToString: Integer to String
+JWIntegerAdd: Integer Add
+JWIntegerSub: Integer Subtract
+JWIntegerMul: Integer Multiply
+JWIntegerDiv: Integer Divide
+JWFloat: Float
+JWFloatToInteger: Float to Integer
+JWFloatToString: Float to String
+JWFloatAdd: Float Add
+JWFloatSub: Float Subtract
+JWFloatMul: Float Multiply
+JWFloatDiv: Float Divide
+JWString: String
+JWStringToInteger: String to Integer
+JWStringToFloat: String to Float
+JWStringMultiline: String (Multiline)
+JWStringConcat: String Concatenate
+JWStringReplace: String Replace
+```
+
+**`comfyui_image_ops.py`**:
+
+```
+JWImageLoadRGB: Image Load RGB
+JWImageResize: Image Resize
+```
+
+Some files contain nodes for my own personal use, and are likely completely useless to anyone else. The following files should be skipped:
+
+- `comfyui_batch_io.py`
+- `comfyui_group_io.py`
