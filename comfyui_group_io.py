@@ -24,7 +24,7 @@ def register_node(identifier: str, display_name: str):
 def load_image(path):
     img = Image.open(path).convert("RGB")
     img = np.array(img).astype(np.float32) / 255.0
-    img = torch.from_numpy(img)[None]
+    img = torch.from_numpy(img).unsqueeze(0)
     return img
 
 
