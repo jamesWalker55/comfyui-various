@@ -4,9 +4,9 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import torchvision
 import yaml
 from PIL import Image
-import torchvision
 from torchvision.transforms import InterpolationMode
 
 NODE_CLASS_MAPPINGS = {}
@@ -39,6 +39,36 @@ def native_torch_to_comfyui(imgs: torch.Tensor):
     Use this to convert torch-native images to ComfyUI images.
     """
     return imgs.permute(0, 2, 3, 1)
+
+
+def load_image(path):
+    img = Image.open(path).convert("RGB")
+    img = np.array(img).astype(np.float32) / 255.0
+    img = torch.from_numpy(img).unsqueeze(0)
+    return img
+
+
+@register_node("JWImageLoadRGB", "Image Load RGB")
+class JWImageLoadRGB:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "path": ("STRING", {"default": "./image.png"}),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, path: str):
+        assert isinstance(path, str)
+
+        return load_image(path)
 
 
 @register_node("JWImageResize", "Image Resize")
