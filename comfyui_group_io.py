@@ -437,7 +437,9 @@ class GroupInfoExtractInt:
         assert isinstance(group_info, dict)
         assert isinstance(key, str)
 
-        return int(group_info[key])
+        val = int(group_info[key])
+
+        return (val,)
 
 
 @register_node("GroupInfoExtractFloat", "Group Info Extract Float")
@@ -466,4 +468,6 @@ class GroupInfoExtractFloat:
         assert isinstance(group_info, dict)
         assert isinstance(key, str)
 
-        return float(group_info[key])
+        val = float(group_info[key])
+
+        return (val,)
