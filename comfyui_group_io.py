@@ -389,7 +389,7 @@ class GroupLoadBatchImages:
                 img = load_image(image_path)
 
                 images.append(img)
-                filenames.append(os.path.split(image_path)[1])
+                filenames.append(os.path.splitext(os.path.basename(image_path))[0])
             except FileNotFoundError as e:
                 print(f"WARNING: Image missing from sequence: {image_path}")
 
