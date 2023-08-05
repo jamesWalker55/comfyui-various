@@ -7,6 +7,7 @@ NODE_MODULES = [
     ".comfyui_batch_io",
     ".comfyui_group_io",
     ".comfyui_image_ops",
+    ".comfyui_maths",
 ]
 
 
