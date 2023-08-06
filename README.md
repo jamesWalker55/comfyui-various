@@ -63,6 +63,20 @@ JWImageLoadRGB: Image Load RGB
 JWImageResize: Image Resize
 ```
 
+**`comfyui_image_channel_ops.py`**:
+
+```
+JWImageStackChannels: Image Stack Channels
+```
+
+**`comfyui_raft.py`**:
+
+```
+RAFTPreprocess: RAFT Preprocess
+RAFTEstimate: RAFT Estimate
+RAFTFlowToImage: RAFT Flow to Image
+```
+
 Some files contain nodes for my own personal use, and are likely completely useless to anyone else. The following files should be skipped:
 
 - `comfyui_batch_io.py`
