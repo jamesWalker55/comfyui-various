@@ -175,11 +175,11 @@ class _:
 
     FUNCTION = "execute"
 
-    def execute(self, flows: torch.Tensor):
-        assert isinstance(flows, torch.Tensor)
-        assert flows.shape[1] == 2
+    def execute(self, raft_flow: torch.Tensor):
+        assert isinstance(raft_flow, torch.Tensor)
+        assert raft_flow.shape[1] == 2
 
-        images = flow_to_image(flows)
+        images = flow_to_image(raft_flow)
         # pixel range is [0, 255], dtype=torch.uint8
 
         images = images / 255
