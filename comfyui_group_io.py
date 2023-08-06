@@ -1,7 +1,6 @@
 import copy
 import glob
 import os
-import typing
 from pathlib import Path
 
 import numpy as np
