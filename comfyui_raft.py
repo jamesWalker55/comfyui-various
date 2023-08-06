@@ -156,6 +156,7 @@ class _:
         model.to(offload_device)
         image_a = image_a.to("cpu")
         image_b = image_b.to("cpu")
+        best_flow = best_flow.to("cpu")
 
         return (best_flow,)
 
