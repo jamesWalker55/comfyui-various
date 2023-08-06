@@ -313,7 +313,7 @@ class GroupLoadBatchImages:
         assert len(definition["groups"]) > 0, "must have at least 1 group"
         assert group_id < len(
             definition["groups"]
-        ), f"not enough groups: {group_id} < {len(definition['groups'])}"
+        ), f"not enough groups: {group_id} <= {len(definition['groups']) - 1}"
 
         prev_start_id = -1
 
