@@ -108,11 +108,6 @@ class _:
 
         image = image.contiguous()
 
-        print(f"{image.shape = }")
-        print(f"{image.shape = }")
-        print(f"{image.shape = }")
-        print(f"{image.shape = }")
-
         return (image,)
 
 
@@ -190,13 +185,5 @@ class _:
         images = images / 255
 
         images = native_torch_to_comfyui(images)
-        print(f"{images.shape = }")
-        print(f"{images.shape = }")
-        print(f"{images.shape = }")
-        print(f"{images.shape = }")
-        print(f"{images.min() = }")
-        print(f"{images.min() = }")
-        print(f"{images.max() = }")
-        print(f"{images.max() = }")
 
         return (images,)
