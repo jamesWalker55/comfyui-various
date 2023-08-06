@@ -87,11 +87,11 @@ def generate_functional_node(
         # generate RETURN_TYPES
         if signature.return_annotation is signature.empty:
             raise TypeError("Functional node must have annotation for return type")
-        elif not isinstance(signature.return_annotation, tuple):
+        elif typing.get_origin(signature.return_annotation) is not tuple:
             raise TypeError("Functional node must return a tuple")
 
         return_types = []
-        for annot in signature.return_annotation:
+        for annot in typing.get_args(signature.return_annotation):
             if isinstance(annot, str):
                 return_types.append(annot)
             elif annot is int:
@@ -124,50 +124,49 @@ def generate_functional_node(
 
 
 @generate_functional_node("jamesWalker55", "JWInteger", "Integer")
-def _(value: int = 0) -> (int,):
+def _(value: int = 0) -> tuple[int]:
     return (value,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerToFloat", "Integer to Float")
-def _(value: int = 0) -> (float,):
+def _(value: int = 0) -> tuple[float]:
     return (float(value),)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerToString", "Integer to String")
-def _(
-    value: int = 0,
-    format_string: str = "{:04d}",
-) -> (str,):
+def _(value: int = 0, format_string: str = "{:04d}") -> tuple[str]:
     return (format_string.format(value),)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerAdd", "Integer Add")
-def _(a: int = 0, b: int = 0) -> (int,):
+def _(a: int = 0, b: int = 0) -> tuple[int]:
     return (a + b,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerSub", "Integer Subtract")
-def _(a: int = 0, b: int = 0) -> (int,):
+def _(a: int = 0, b: int = 0) -> tuple[int]:
     return (a - b,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerMul", "Integer Multiply")
-def _(a: int = 0, b: int = 0) -> (int,):
+def _(a: int = 0, b: int = 0) -> tuple[int]:
     return (a * b,)
 
 
 @generate_functional_node("jamesWalker55", "JWIntegerDiv", "Integer Divide")
-def _(a: int = 0, b: int = 0) -> (float,):
+def _(a: int = 0, b: int = 0) -> tuple[float]:
     return (a / b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloat", "Float")
-def _(value: float = 0) -> (float,):
+def _(value: float = 0) -> tuple[float]:
     return (value,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatToInteger", "Float to Integer")
-def _(value: float = 0, mode: Literal["round", "floor", "ceiling"] = None) -> (int,):
+def _(
+    value: float = 0, mode: Literal["round", "floor", "ceiling"] = None
+) -> tuple[int]:
     if mode == "round":
         return (round(value),)
     elif mode == "floor":
@@ -179,60 +178,57 @@ def _(value: float = 0, mode: Literal["round", "floor", "ceiling"] = None) -> (i
 
 
 @generate_functional_node("jamesWalker55", "JWFloatToString", "Float to String")
-def _(
-    value: int = 0,
-    format_string: str = "{:.6g}",
-) -> (str,):
+def _(value: int = 0, format_string: str = "{:.6g}") -> tuple[str]:
     return (format_string.format(value),)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatAdd", "Float Add")
-def _(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> tuple[float]:
     return (a + b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatSub", "Float Subtract")
-def _(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> tuple[float]:
     return (a - b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatMul", "Float Multiply")
-def _(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> tuple[float]:
     return (a * b,)
 
 
 @generate_functional_node("jamesWalker55", "JWFloatDiv", "Float Divide")
-def _(a: float = 0, b: float = 0) -> (float,):
+def _(a: float = 0, b: float = 0) -> tuple[float]:
     return (a / b,)
 
 
 @generate_functional_node("jamesWalker55", "JWString", "String")
-def _(text: str = "") -> (str,):
+def _(text: str = "") -> tuple[str]:
     return (text,)
 
 
 @generate_functional_node("jamesWalker55", "JWStringToInteger", "String to Integer")
-def _(text: str = "0") -> (int,):
+def _(text: str = "0") -> tuple[int]:
     return (int(text),)
 
 
 @generate_functional_node("jamesWalker55", "JWStringToFloat", "String to Float")
-def _(text: str = "0.0") -> (float,):
+def _(text: str = "0.0") -> tuple[float]:
     return (float(text),)
 
 
 @generate_functional_node(
     "jamesWalker55", "JWStringMultiline", "String (Multiline)", multiline_string=True
 )
-def _(text: str = "") -> (str,):
+def _(text: str = "") -> tuple[str]:
     return (text,)
 
 
 @generate_functional_node("jamesWalker55", "JWStringConcat", "String Concatenate")
-def _(a: str = "", b: str = "") -> (str,):
+def _(a: str = "", b: str = "") -> tuple[str]:
     return (a + b,)
 
 
 @generate_functional_node("jamesWalker55", "JWStringReplace", "String Replace")
-def _(source: str = "", to_replace: str = "", replace_with: str = "") -> (str,):
+def _(source: str = "", to_replace: str = "", replace_with: str = "") -> tuple[str]:
     return (source.replace(to_replace, replace_with),)
