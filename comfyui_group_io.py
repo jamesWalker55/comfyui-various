@@ -373,7 +373,6 @@ class GroupedWorkspace:
         image_path = self._get_image_path(group_id, frame_id)
 
         img = load_image(image_path)
-        img = img.unsqueeze(0)
         filename = os.path.splitext(os.path.basename(image_path))[0]
 
         return img, filename
@@ -499,7 +498,7 @@ class GroupLoadImage:
         "FILENAME",
         "GROUP_INFO",
     )
-    RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING", "GROUP_INFO")
+    RETURN_TYPES = ("STRING", "STRING", "IMAGE", "STRING", "GROUP_INFO")
 
     OUTPUT_NODE = False
 
