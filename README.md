@@ -16,6 +16,13 @@ Go though each file and see which nodes you want to use. Download the correspond
 ComfyUI/custom_nodes
 ```
 
+If you want to use `comfyui_raft.py`, you must install `OpenEXR` in your ComfyUI Python environment.
+
+```sh
+# Activate your Python environment first.
+pip install OpenEXR
+```
+
 ### Method 2: Clone the repo
 
 This method is **not recommended**, since it populates your node list with ALL nodes in this repository, including certain nodes that are likely useless to anyone except me (see [Available Nodes] for files to avoid).
@@ -75,6 +82,7 @@ JWImageStackChannels: Image Stack Channels
 RAFTPreprocess: RAFT Preprocess
 RAFTEstimate: RAFT Estimate
 RAFTFlowToImage: RAFT Flow to Image
+RAFTLoadFlowFromEXRChannels: RAFT Load Flow from EXR Channels
 ```
 
 Some files contain nodes for my own personal use, and are likely completely useless to anyone else. The following files should be skipped:
