@@ -255,8 +255,12 @@ class GroupedWorkspace:
         self._parse_groups(definition)
 
     @classmethod
-    def open(cls, path):
-        base_path = Path(path).parent
+    def open(cls, path, base_path=None):
+        if base_path is None:
+            base_path = Path(path).parent
+        else:
+            base_path = Path(base_path)
+
         with open(path, "r", encoding="utf8") as f:
             definition = yaml.safe_load(f)
         return cls(base_path, definition)
@@ -425,6 +429,9 @@ class GroupedWorkspace:
 class GroupLoadBatchImages:
     """
     An opinionated batch image loader. This is used for loading groups for batch processing.
+
+    "base_path" controls where the images are loaded relative from. Defaults to the
+    folder containing the definition file.
     """
 
     CATEGORY = "jamesWalker55"
@@ -436,6 +443,7 @@ class GroupLoadBatchImages:
                 {"default": "./groups.yml", "multiline": False},
             ),
             "group_id": ("INT", {"default": 1, "min": 0, "step": 1, "max": 9999}),
+            "base_path": ("STRING", {"default": ""}),
         }
     }
 
@@ -453,11 +461,16 @@ class GroupLoadBatchImages:
 
     FUNCTION = "execute"
 
-    def execute(self, definition_path: str, group_id: int):
+    def execute(self, definition_path: str, group_id: int, base_path: str):
         assert isinstance(definition_path, str)
         assert isinstance(group_id, int)
+        assert isinstance(base_path, str)
 
-        workspace = GroupedWorkspace.open(definition_path)
+        base_path = base_path.strip()
+        if len(base_path) == 0:
+            base_path = None
+
+        workspace = GroupedWorkspace.open(definition_path, base_path=base_path)
 
         images, filenames = workspace.get_group_images(group_id)
         pos_prompt, neg_prompt = workspace.get_group_prompts(group_id)
@@ -477,6 +490,9 @@ class GroupLoadBatchImages:
 class GroupLoadImage:
     """
     An opinionated image loader. This is used for loading groups for batch processing.
+
+    "base_path" controls where the images are loaded relative from. Defaults to the
+    folder containing the definition file.
     """
 
     CATEGORY = "jamesWalker55"
@@ -488,6 +504,7 @@ class GroupLoadImage:
                 {"default": "./groups.yml", "multiline": False},
             ),
             "frame_id": ("INT", {"default": 1, "min": 0, "step": 1, "max": 9999}),
+            "base_path": ("STRING", {"default": ""}),
         }
     }
 
@@ -504,11 +521,16 @@ class GroupLoadImage:
 
     FUNCTION = "execute"
 
-    def execute(self, definition_path: str, frame_id: int):
+    def execute(self, definition_path: str, frame_id: int, base_path: str):
         assert isinstance(definition_path, str)
         assert isinstance(frame_id, int)
+        assert isinstance(base_path, str)
 
-        workspace = GroupedWorkspace.open(definition_path)
+        base_path = base_path.strip()
+        if len(base_path) == 0:
+            base_path = None
+
+        workspace = GroupedWorkspace.open(definition_path, base_path=base_path)
 
         image, filename = workspace.get_frame_image(frame_id)
         pos_prompt, neg_prompt = workspace.get_frame_prompts(frame_id)
