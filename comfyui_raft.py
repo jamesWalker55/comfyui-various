@@ -142,14 +142,20 @@ class _:
         assert isinstance(image_a, torch.Tensor)
         assert isinstance(image_b, torch.Tensor)
 
-        image_a = comfyui_to_native_torch(image_a)
-        image_b = comfyui_to_native_torch(image_b)
+        torch_device = model_management.get_torch_device()
+        offload_device = model_management.unet_offload_device()
 
-        model = load_model()
+        image_a = comfyui_to_native_torch(image_a).to(torch_device)
+        image_b = comfyui_to_native_torch(image_b).to(torch_device)
+        model = load_model().to(torch_device)
 
         all_flows = model(image_a, image_b)
         best_flow = all_flows[-1]
         # best_flow.shape => torch.Size([1, 2, 512, 512])
+
+        model.to(offload_device)
+        image_a = image_a.to("cpu")
+        image_b = image_b.to("cpu")
 
         return (best_flow,)
 
