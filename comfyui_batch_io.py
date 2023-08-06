@@ -51,7 +51,7 @@ class BatchLoadImage:
     }
 
     RETURN_NAMES = ("IMAGE", "FRAME_COUNT", "FILENAMES")
-    RETURN_TYPES = ("IMAGE", "INT", "STRING_LIST")
+    RETURN_TYPES = ("IMAGE", "INT", "STRING")
 
     OUTPUT_NODE = False
 
@@ -97,7 +97,7 @@ class BatchLoadImage:
 
         assert len(imgs) == len(filenames)
 
-        return (imgs, len(imgs), filenames)
+        return (imgs, len(imgs), "\n".join(filenames))
 
 
 @register_node("BatchSaveImage", "Batch Save Image")
@@ -118,7 +118,7 @@ class BatchSaveImage:
             "render_video_fps": ("INT", {"default": 8, "min": 0, "step": 1}),
         },
         "optional": {
-            "filenames": ("STRING_LIST",),
+            "filenames": ("STRING",),
         },
         "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
     }
@@ -139,11 +139,13 @@ class BatchSaveImage:
         numbering_start: int,
         numbering_digits: int,
         render_video_fps: int,
-        filenames: list[str] | None = None,
+        filenames: str | None = None,
         prompt=None,
         extra_pnginfo=None,
     ):
         if filenames is not None:
+            filenames = [x.strip() for x in filenames.splitlines()]
+            filenames = [x for x in filenames if len(x) > 0]
             if len(filenames) != len(images):
                 raise ValueError(
                     f"Number of images ({len(images)}) and filenames ({len(filenames)}) must be the same"

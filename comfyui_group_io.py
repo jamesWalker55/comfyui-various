@@ -84,7 +84,7 @@ class JamesLoadImageGroup:
         "FRAME_COUNT",
         "FILENAMES",
     )
-    RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING_LIST")
+    RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING")
 
     OUTPUT_NODE = False
 
@@ -117,7 +117,7 @@ class JamesLoadImageGroup:
         print(
             f"JamesLoadImageGroup: {(pos_prompt, neg_prompt, len(filenames), filenames)!r}"
         )
-        return (pos_prompt, neg_prompt, images, len(filenames), filenames)
+        return (pos_prompt, neg_prompt, images, len(filenames), "\n".join(filenames))
 
     def get_base_prompt(
         self,
@@ -328,7 +328,8 @@ class GroupedWorkspace:
         info = self._get_group_info(group_id)
         return {**info, "frame_id": frame_id}
 
-    def get_frame_info(self, group_id: int, frame_id: int):
+    def get_frame_info(self, frame_id: int):
+        group_id = self._frame_id_to_group_id(frame_id)
         return copy.deepcopy(self._get_frame_info(group_id, frame_id))
 
     def _get_positive_prompt(self, group_id: int):
@@ -448,7 +449,7 @@ class GroupLoadBatchImages:
         "FILENAMES",
         "GROUP_INFO",
     )
-    RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING_LIST", "GROUP_INFO")
+    RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING", "GROUP_INFO")
 
     OUTPUT_NODE = False
 
@@ -464,7 +465,14 @@ class GroupLoadBatchImages:
         pos_prompt, neg_prompt = workspace.get_group_prompts(group_id)
         group_info = workspace.get_group_info(group_id)
 
-        return (pos_prompt, neg_prompt, images, len(filenames), filenames, group_info)
+        return (
+            pos_prompt,
+            neg_prompt,
+            images,
+            len(filenames),
+            "\n".join(filenames),
+            group_info,
+        )
 
 
 @register_node("GroupInfoExtractInt", "Group Info Extract Integer")
