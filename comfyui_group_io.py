@@ -1,5 +1,7 @@
+import copy
 import glob
 import os
+import typing
 from pathlib import Path
 
 import numpy as np
@@ -214,11 +216,8 @@ class JamesLoadImageGroup:
         return imgs, filenames
 
 
-@register_node("GroupLoadBatchImages", "Group Load Batch Images")
-class GroupLoadBatchImages:
+class GroupedWorkspace:
     """
-    An opinionated batch image loader. This is used for loading groups for batch processing.
-
     YAML structure:
 
     ```yaml
@@ -241,6 +240,192 @@ class GroupLoadBatchImages:
         negative: ...
       ...
     ```
+    """
+
+    _original_definition: dict
+    _base_path: Path
+    _base_pos: str
+    _base_neg: str
+    _image_pattern: str
+    _groups: list[dict]
+
+    def __init__(self, base_path: Path, definition: dict):
+        self._validate_definition(definition)
+        self._original_definition = definition
+        self._base_path = base_path
+        self._parse_groups(definition)
+
+    @classmethod
+    def open(cls, path):
+        base_path = Path(path).parent
+        with open(path, "r", encoding="utf8") as f:
+            definition = yaml.safe_load(f)
+        return cls(base_path, definition)
+
+    @staticmethod
+    def _validate_definition(definition):
+        assert isinstance(definition, dict), "file must be a dict"
+
+        assert "positive" in definition, "missing key: positive"
+        assert isinstance(definition["positive"], str), "positive must be a string"
+
+        assert "negative" in definition, "missing key: negative"
+        assert isinstance(definition["negative"], str), "negative must be a string"
+
+        assert "image_pattern" in definition, "missing key: image_pattern"
+        assert isinstance(definition["image_pattern"], str), "pattern must be a string"
+
+        assert "groups" in definition, "missing key: groups"
+        assert isinstance(definition["groups"], list), "groups must be a list"
+        assert len(definition["groups"]) > 0, "must have at least 1 group"
+
+        assert "start_id" not in definition, "'start_id' not allowed at root"
+        assert "group_id" not in definition, "'group_id' not allowed in definition"
+
+        prev_start_id = -1
+
+        for gp in definition["groups"]:
+            assert isinstance(gp, dict), "group must be a dict"
+
+            assert "start_id" in gp, "group missing key: start_id"
+            assert "group_id" not in gp, "'group_id' not allowed in definition"
+
+            start_id = gp["start_id"]
+            assert isinstance(start_id, int), "start_id must be a number"
+            assert start_id >= 0, "start_id cannot be negative"
+            assert prev_start_id < start_id, "start_id must be in ascending order"
+
+            prev_start_id = start_id
+
+    def _parse_groups(self, definition: dict):
+        definition = copy.deepcopy(definition)
+
+        self._base_pos = definition.pop("positive")
+        self._base_neg = definition.pop("negative")
+        self._image_pattern = definition.pop("image_pattern")
+        raw_groups = definition.pop("groups")
+        assert "start_id" not in definition
+
+        self._groups = []
+
+        for group in raw_groups:
+            assert "start_id" in group
+            assert isinstance(group["start_id"], int)
+
+            # add extra keys in definition to group info
+            group = {**definition, **group}
+
+            self._groups.append(group)
+
+    def _get_group_info(self, group_id: int):
+        group = self._groups[group_id]
+        return {**group, "group_id": group_id}
+
+    def get_group_info(self, group_id: int):
+        return copy.deepcopy(self._get_group_info(group_id))
+
+    def _get_frame_info(self, group_id: int, frame_id: int):
+        info = self._get_group_info(group_id)
+        return {**info, "frame_id": frame_id}
+
+    def get_frame_info(self, group_id: int, frame_id: int):
+        return copy.deepcopy(self._get_frame_info(group_id, frame_id))
+
+    def _get_positive_prompt(self, group_id: int):
+        prompt = self._base_pos.format(**self._get_group_info(group_id))
+        return prompt
+
+    def _get_negative_prompt(self, group_id: int):
+        prompt = self._base_neg.format(**self._get_group_info(group_id))
+        return prompt
+
+    def _get_image_path(self, group_id: int, frame_id: int):
+        relpath = self._image_pattern.format(**self._get_frame_info(group_id, frame_id))
+        return self._base_path / relpath
+
+    def _get_group_frame_range(self, group_id: int) -> tuple[int, int | None]:
+        start_frame_id: int = self._groups[group_id]["start_id"]
+
+        if group_id < len(self._groups) - 1:
+            # Not last group, last frame is the next group's start frame
+            # Otherwise, must determine end frame ID dynamically
+            return start_frame_id, self._groups[group_id + 1]["start_id"]
+        else:
+            return start_frame_id, None
+
+    def _frame_id_to_group_id(self, frame_id: int):
+        for i, group in enumerate(self._groups):
+            if frame_id >= group["start_id"]:
+                # frame ID is higher than this group
+                continue
+
+            # frame ID belongs to previous group
+            if i == 0:
+                raise ValueError(f"Frame ID {frame_id} is not covered by any group")
+
+            return i - 1
+
+        # return last group
+        return len(self._groups) - 1
+
+    def get_frame_image(self, frame_id: int):
+        group_id = self._frame_id_to_group_id(frame_id)
+        image_path = self._get_image_path(group_id, frame_id)
+
+        img = load_image(image_path)
+        img = img.unsqueeze(0)
+        filename = os.path.splitext(os.path.basename(image_path))[0]
+
+        return img, filename
+
+    def get_frame_prompts(self, frame_id: int):
+        group_id = self._frame_id_to_group_id(frame_id)
+        return self._get_positive_prompt(group_id), self._get_negative_prompt(group_id)
+
+    def get_group_prompts(self, group_id: int):
+        return self._get_positive_prompt(group_id), self._get_negative_prompt(group_id)
+
+    def get_group_images(self, group_id: int):
+        start_frame, end_frame = self._get_group_frame_range(group_id)
+
+        images = []
+        filenames: list[str] = []
+
+        i = start_frame
+        while True:
+            image_path = self._get_image_path(group_id, i)
+
+            # check for end of sequence
+            if end_frame is not None and i >= end_frame:
+                # reached end of sequence
+                break
+            elif end_frame is None and not os.path.exists(image_path):
+                # unknown end frame, and this frame is missing
+                # assume this is the end of sequence
+                break
+
+            try:
+                img = load_image(image_path)
+
+                images.append(img)
+                filenames.append(image_path.stem)
+            except FileNotFoundError as e:
+                print(f"WARNING: Image missing from sequence: {image_path}")
+
+            i += 1
+
+        images = torch.cat(images, dim=0)
+
+        # sanity check, image count == filename count
+        assert len(images) == len(filenames)
+
+        return images, filenames
+
+
+@register_node("GroupLoadBatchImages", "Group Load Batch Images")
+class GroupLoadBatchImages:
+    """
+    An opinionated batch image loader. This is used for loading groups for batch processing.
     """
 
     CATEGORY = "jamesWalker55"
@@ -269,153 +454,17 @@ class GroupLoadBatchImages:
 
     FUNCTION = "execute"
 
-    TYPE_GROUP = dict[str, int | str]
-    TYPE_DEFINITION = dict[str, str | list[TYPE_GROUP]]
-
-    def execute(
-        self,
-        definition_path: str,
-        group_id: int,
-    ):
+    def execute(self, definition_path: str, group_id: int):
         assert isinstance(definition_path, str)
         assert isinstance(group_id, int)
 
-        with open(definition_path, "r", encoding="utf8") as f:
-            definition = yaml.safe_load(f)
+        workspace = GroupedWorkspace.open(definition_path)
 
-        self.validate_format(definition, group_id)
+        images, filenames = workspace.get_group_images(group_id)
+        pos_prompt, neg_prompt = workspace.get_group_prompts(group_id)
+        group_info = workspace.get_group_info(group_id)
 
-        images, filenames = self.get_group_images(definition_path, definition, group_id)
-
-        pos_prompt, neg_prompt = self.get_group_prompts(definition, group_id)
-
-        group_info = self.generate_group_info(definition, group_id)
-
-        print(
-            f"JamesLoadYAMLImageGroup: {(pos_prompt, neg_prompt, len(filenames), filenames, group_info)!r}"
-        )
         return (pos_prompt, neg_prompt, images, len(filenames), filenames, group_info)
-
-    def validate_format(self, definition: TYPE_DEFINITION, group_id: int):
-        assert isinstance(definition, dict), "file must be a dict"
-
-        assert "positive" in definition, "missing key: positive"
-        assert isinstance(definition["positive"], str), "positive must be a string"
-
-        assert "negative" in definition, "missing key: negative"
-        assert isinstance(definition["negative"], str), "negative must be a string"
-
-        assert "image_pattern" in definition, "missing key: image_pattern"
-        assert isinstance(definition["image_pattern"], str), "pattern must be a string"
-
-        assert "groups" in definition, "missing key: groups"
-        assert isinstance(definition["groups"], list), "groups must be a list"
-        assert len(definition["groups"]) > 0, "must have at least 1 group"
-        assert group_id < len(
-            definition["groups"]
-        ), f"not enough groups: {group_id} <= {len(definition['groups']) - 1}"
-
-        prev_start_id = -1
-
-        for gp in definition["groups"]:
-            assert isinstance(gp, dict), "group must be a dict"
-
-            assert "start_id" in gp, "group missing key: start_id"
-
-            start_id = gp["start_id"]
-            assert isinstance(start_id, int), "start_id must be a number"
-            assert start_id >= 0, "start_id cannot be negative"
-            assert prev_start_id < start_id, "start_id must be in ascending order"
-
-            prev_start_id = start_id
-
-    def generate_group_info(self, definition: TYPE_DEFINITION, group_id: int):
-        format_info = definition["groups"][group_id].copy()
-        format_info["group_id"] = group_id
-        return format_info
-
-    def get_group_frame_range(self, definition: TYPE_DEFINITION, group_id: int):
-        groups = definition["groups"]
-
-        start_frame_id: int = groups[group_id]["start_id"]
-
-        end_frame_id: int | None = None
-        if group_id < len(groups) - 1:
-            # Not last group, last frame is the next group's start frame
-            # Otherwise, must determine end frame ID dynamically
-            end_frame_id = groups[group_id + 1]["start_id"]
-
-        return start_frame_id, end_frame_id
-
-    def get_group_image_path(
-        self,
-        definition_path: str,
-        definition: TYPE_DEFINITION,
-        group_id: int,
-        frame_id: int,
-    ):
-        base_path = Path(definition_path).parent
-        pattern = definition["image_pattern"]
-
-        format_info = self.generate_group_info(definition, group_id)
-        format_info["frame_id"] = frame_id
-
-        return base_path / pattern.format(**format_info)
-
-    def get_group_images(
-        self, definition_path: str, definition: TYPE_DEFINITION, group_id: int
-    ):
-        start_frame, end_frame = self.get_group_frame_range(definition, group_id)
-
-        images = []
-        filenames = []
-
-        i = start_frame
-        while True:
-            image_path = self.get_group_image_path(
-                definition_path, definition, group_id, i
-            )
-
-            # check for end of sequence
-            if end_frame is not None and i >= end_frame:
-                # reached end of sequence
-                break
-            elif end_frame is None and not os.path.exists(image_path):
-                # unknown end frame, and this frame is missing
-                # assume this is the end of sequence
-                break
-
-            try:
-                img = load_image(image_path)
-
-                images.append(img)
-                filenames.append(os.path.splitext(os.path.basename(image_path))[0])
-            except FileNotFoundError as e:
-                print(f"WARNING: Image missing from sequence: {image_path}")
-
-            i += 1
-
-        images = torch.cat(images, dim=0)
-
-        # sanity check, image count == filename count
-        assert len(images) == len(filenames)
-
-        return images, filenames
-
-    def get_group_prompts(
-        self,
-        definition: TYPE_DEFINITION,
-        group_id: int,
-    ):
-        base_pos = definition["positive"]
-        base_neg = definition["negative"]
-
-        format_info = self.generate_group_info(definition, group_id)
-
-        final_pos = base_pos.format(**format_info)
-        final_neg = base_neg.format(**format_info)
-
-        return final_pos, final_neg
 
 
 @register_node("GroupInfoExtractInt", "Group Info Extract Integer")
@@ -436,11 +485,7 @@ class GroupInfoExtractInt:
 
     FUNCTION = "execute"
 
-    def execute(
-        self,
-        group_info: dict,
-        key: str,
-    ):
+    def execute(self, group_info: dict, key: str):
         assert isinstance(group_info, dict)
         assert isinstance(key, str)
 
@@ -467,11 +512,7 @@ class GroupInfoExtractFloat:
 
     FUNCTION = "execute"
 
-    def execute(
-        self,
-        group_info: dict,
-        key: str,
-    ):
+    def execute(self, group_info: dict, key: str):
         assert isinstance(group_info, dict)
         assert isinstance(key, str)
 
