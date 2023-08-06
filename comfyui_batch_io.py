@@ -118,7 +118,7 @@ class BatchSaveImage:
             "render_video_fps": ("INT", {"default": 8, "min": 0, "step": 1}),
         },
         "optional": {
-            "filenames": ("STRING",),
+            "filenames": ("STRING", {"multiline": True}),
         },
         "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
     }
