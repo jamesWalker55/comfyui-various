@@ -8,6 +8,8 @@ NODE_MODULES = [
     ".comfyui_group_io",
     ".comfyui_image_ops",
     ".comfyui_primitive_ops",
+    ".comfyui_raft",
+    ".comfyui_image_channel_ops",
 ]
 
 
