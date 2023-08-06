@@ -68,7 +68,8 @@ class JWImageLoadRGB:
     def execute(self, path: str):
         assert isinstance(path, str)
 
-        return load_image(path)
+        img = load_image(path)
+        return (img,)
 
 
 @register_node("JWImageResize", "Image Resize")
