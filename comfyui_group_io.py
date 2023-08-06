@@ -475,6 +475,50 @@ class GroupLoadBatchImages:
         )
 
 
+@register_node("GroupLoadImage", "Group Load Image")
+class GroupLoadImage:
+    """
+    An opinionated image loader. This is used for loading groups for batch processing.
+    """
+
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "definition_path": (
+                "STRING",
+                {"default": "./groups.yml", "multiline": False},
+            ),
+            "frame_id": ("INT", {"default": 1, "min": 0, "step": 1, "max": 9999}),
+        }
+    }
+
+    RETURN_NAMES = (
+        "POSITIVE_PROMPT",
+        "NEGATIVE_PROMPT",
+        "IMAGE",
+        "FILENAME",
+        "GROUP_INFO",
+    )
+    RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING", "GROUP_INFO")
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, definition_path: str, frame_id: int):
+        assert isinstance(definition_path, str)
+        assert isinstance(frame_id, int)
+
+        workspace = GroupedWorkspace.open(definition_path)
+
+        image, filename = workspace.get_frame_image(frame_id)
+        pos_prompt, neg_prompt = workspace.get_frame_prompts(frame_id)
+        group_info = workspace.get_frame_info(frame_id)
+
+        return (pos_prompt, neg_prompt, image, filename, group_info)
+
+
 @register_node("GroupInfoExtractInt", "Group Info Extract Integer")
 class GroupInfoExtractInt:
     CATEGORY = "jamesWalker55"
