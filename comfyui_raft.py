@@ -58,58 +58,20 @@ def load_model():
         raise e
 
 
-@register_node("RAFTPreprocess", "RAFT Preprocess")
-class _:
-    """
-    Preprocess images for use in RAFT. See:
+def preprocess_image(img: torch.Tensor):
+    # Image size must be divisible by 8
+    _, _, h, w = img.shape
+    assert h % 8 == 0, "Image height must be divisible by 8"
+    assert w % 8 == 0, "Image width must be divisible by 8"
 
-    https://pytorch.org/vision/main/auto_examples/plot_optical_flow.html
-    """
+    img = F.convert_image_dtype(img, torch.float)
 
-    CATEGORY = "jamesWalker55"
+    # map [0, 1] into [-1, 1]
+    img = F.normalize(img, mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
 
-    INPUT_TYPES = lambda: {
-        "required": {
-            "image": ("IMAGE",),
-            "width": ("INT", {"default": 512, "min": 8, "step": 8, "max": 4096}),
-            "height": ("INT", {"default": 512, "min": 8, "step": 8, "max": 4096}),
-        }
-    }
+    img = img.contiguous()
 
-    RETURN_NAMES = ("IMAGE",)
-    RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
-    FUNCTION = "execute"
-
-    def execute(self, image: torch.Tensor, width: int, height: int):
-        """
-        Code derived from:
-        https://pytorch.org/vision/main/auto_examples/plot_optical_flow.html
-        https://github.com/pytorch/vision/blob/main/torchvision/transforms/_presets.py
-        """
-
-        assert isinstance(image, torch.Tensor)
-        assert isinstance(width, int)
-        assert isinstance(height, int)
-
-        # "resize them to ensure their dimensions are divisible by 8"
-        # "Note that we explicitly use antialias=False, because this is how those models were trained"
-        image = comfyui_to_native_torch(image)
-
-        image = F.resize(image, size=[height, width], antialias=False)
-
-        image = F.convert_image_dtype(image, torch.float)
-
-        # map [0, 1] into [-1, 1]
-        image = F.normalize(image, mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
-
-        image = native_torch_to_comfyui(image)
-
-        image = image.contiguous()
-
-        return (image,)
+    return img
 
 
 @register_node("RAFTEstimate", "RAFT Estimate")
@@ -149,6 +111,9 @@ class _:
         image_a = comfyui_to_native_torch(image_a).to(torch_device)
         image_b = comfyui_to_native_torch(image_b).to(torch_device)
         model = load_model().to(torch_device)
+
+        image_a = preprocess_image(image_a)
+        image_b = preprocess_image(image_b)
 
         all_flows = model(image_a, image_b)
         best_flow = all_flows[-1]
