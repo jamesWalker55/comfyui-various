@@ -42,5 +42,17 @@ def load_nodes(module_name: str):
     }
 
 
+def print_nodes(module_name: str):
+    module = importlib.import_module(module_name, package=__name__)
+
+    print(module_name.strip("."))
+
+    for identifier, display_name in module.NODE_DISPLAY_NAME_MAPPINGS.items():
+        print(f"  {identifier}: {display_name}")
+
+    print()
+
+
 for module_name in NODE_MODULES:
     load_nodes(module_name)
+    # print_nodes(module_name)
