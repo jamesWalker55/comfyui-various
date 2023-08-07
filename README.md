@@ -64,7 +64,6 @@ comfyui_primitive_ops
   JWStringReplace: String Replace
 
 comfyui_raft
-  RAFTPreprocess: RAFT Preprocess
   RAFTEstimate: RAFT Estimate
   RAFTFlowToImage: RAFT Flow to Image
   RAFTLoadFlowFromEXRChannels: RAFT Load Flow from EXR Channels
