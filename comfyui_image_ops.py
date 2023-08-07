@@ -117,6 +117,53 @@ class _:
         return (image,)
 
 
+@register_node("JWImageResizeToSquare", "Image Resize to Square")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "size": ("INT", {"default": 512, "min": 0, "step": 1, "max": 99999}),
+            "interpolation_mode": (
+                ["bicubic", "bilinear", "nearest", "nearest exact"],
+            ),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        size: int,
+        interpolation_mode: str,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(size, int)
+        assert isinstance(interpolation_mode, str)
+
+        interpolation_mode = interpolation_mode.upper().replace(" ", "_")
+        interpolation_mode = getattr(InterpolationMode, interpolation_mode)
+
+        resizer = torchvision.transforms.Resize(
+            (size, size),
+            interpolation=interpolation_mode,
+            antialias=True,
+        )
+
+        image = comfyui_to_native_torch(image)
+        image = resizer(image)
+        image = native_torch_to_comfyui(image)
+
+        return (image,)
+
+
 # @register_node("JWImageToSquare", "Image To Square")
 # class JWImageToSquare:
 #     CATEGORY = "jamesWalker55"
