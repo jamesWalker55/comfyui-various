@@ -36,63 +36,44 @@ git clone https://github.com/jamesWalker55/comfyui-various
 
 Each `comfyui_*.py` file contains a group of nodes of similar purpose. This repo is still in early stages so I can't write documentation for each file yet - have a look at the code for each file to see what they are for.
 
-### comfyui_primitive_ops.py
-
 ```
-JWInteger: Integer
-JWIntegerToFloat: Integer to Float
-JWIntegerToString: Integer to String
-JWIntegerAdd: Integer Add
-JWIntegerSub: Integer Subtract
-JWIntegerMul: Integer Multiply
-JWIntegerDiv: Integer Divide
-JWFloat: Float
-JWFloatToInteger: Float to Integer
-JWFloatToString: Float to String
-JWFloatAdd: Float Add
-JWFloatSub: Float Subtract
-JWFloatMul: Float Multiply
-JWFloatDiv: Float Divide
-JWString: String
-JWStringToInteger: String to Integer
-JWStringToFloat: String to Float
-JWStringMultiline: String (Multiline)
-JWStringConcat: String Concatenate
-JWStringReplace: String Replace
-```
+comfyui_image_ops
+  JWImageLoadRGB: Image Load RGB
+  JWImageResize: Image Resize
 
-### comfyui_image_ops.py
+comfyui_primitive_ops
+  JWInteger: Integer
+  JWIntegerToFloat: Integer to Float
+  JWIntegerToString: Integer to String
+  JWIntegerAdd: Integer Add
+  JWIntegerSub: Integer Subtract
+  JWIntegerMul: Integer Multiply
+  JWIntegerDiv: Integer Divide
+  JWFloat: Float
+  JWFloatToInteger: Float to Integer
+  JWFloatToString: Float to String
+  JWFloatAdd: Float Add
+  JWFloatSub: Float Subtract
+  JWFloatMul: Float Multiply
+  JWFloatDiv: Float Divide
+  JWString: String
+  JWStringToInteger: String to Integer
+  JWStringToFloat: String to Float
+  JWStringMultiline: String (Multiline)
+  JWStringConcat: String Concatenate
+  JWStringReplace: String Replace
 
-```
-JWImageLoadRGB: Image Load RGB
-JWImageResize: Image Resize
-```
+comfyui_raft
+  RAFTPreprocess: RAFT Preprocess
+  RAFTEstimate: RAFT Estimate
+  RAFTFlowToImage: RAFT Flow to Image
+  RAFTLoadFlowFromEXRChannels: RAFT Load Flow from EXR Channels
 
-### comfyui_image_channel_ops.py
+comfyui_image_channel_ops
+  JWImageStackChannels: Image Stack Channels
 
-```
-JWImageStackChannels: Image Stack Channels
-```
-
-### comfyui_raft.py
-
-```
-RAFTPreprocess: RAFT Preprocess
-RAFTEstimate: RAFT Estimate
-RAFTFlowToImage: RAFT Flow to Image
-RAFTLoadFlowFromEXRChannels: RAFT Load Flow from EXR Channels
-```
-
-### comfyui_color_ops.py
-
-```
-JWImageMix: Image Mix
-```
-
-### comfyui_image_channel_ops.py
-
-```
-JWImageStackChannels: Image Stack Channels
+comfyui_color_ops
+  JWImageMix: Image Mix
 ```
 
 ### Other nodes
