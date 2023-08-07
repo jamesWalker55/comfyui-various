@@ -27,7 +27,7 @@ if (
     )
 
 
-def load_nodes(module_name):
+def load_nodes(module_name: str):
     global NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
 
     module = importlib.import_module(module_name, package=__name__)
