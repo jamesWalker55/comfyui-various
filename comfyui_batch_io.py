@@ -31,7 +31,7 @@ def load_image(path):
 
 
 @register_node("BatchLoadImage", "Batch Load Image")
-class BatchLoadImage:
+class _:
     """
     Batch-load images in a given folder. To avoid loading too many images at once,
     you can use `paginate_size` and `paginate_page` to load a subset of the images.
@@ -101,7 +101,7 @@ class BatchLoadImage:
 
 
 @register_node("BatchSaveImage", "Batch Save Image")
-class BatchSaveImage:
+class _:
     CATEGORY = "jamesWalker55"
 
     INPUT_TYPES = lambda: {

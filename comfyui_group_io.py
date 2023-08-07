@@ -30,7 +30,7 @@ def load_image(path):
 
 
 @register_node("JamesLoadImageGroup", "James: Load Image Group")
-class JamesLoadImageGroup:
+class _:
     """
     An opinionated batch image loader. This is used for loading groups for batch processing.
 
@@ -426,7 +426,7 @@ class GroupedWorkspace:
 
 
 @register_node("GroupLoadBatchImages", "Group Load Batch Images")
-class GroupLoadBatchImages:
+class __:
     """
     An opinionated batch image loader. This is used for loading groups for batch processing.
 
@@ -487,7 +487,7 @@ class GroupLoadBatchImages:
 
 
 @register_node("GroupLoadImage", "Group Load Image")
-class GroupLoadImage:
+class _:
     """
     An opinionated image loader. This is used for loading groups for batch processing.
 
@@ -540,7 +540,7 @@ class GroupLoadImage:
 
 
 @register_node("GroupInfoExtractInt", "Group Info Extract Integer")
-class GroupInfoExtractInt:
+class _:
     CATEGORY = "jamesWalker55"
 
     INPUT_TYPES = lambda: {
@@ -567,7 +567,7 @@ class GroupInfoExtractInt:
 
 
 @register_node("GroupInfoExtractFloat", "Group Info Extract Float")
-class GroupInfoExtractFloat:
+class _:
     CATEGORY = "jamesWalker55"
 
     INPUT_TYPES = lambda: {

@@ -44,7 +44,7 @@ def load_image(path):
 
 
 @register_node("JWImageLoadRGB", "Image Load RGB")
-class JWImageLoadRGB:
+class _:
     CATEGORY = "jamesWalker55"
 
     INPUT_TYPES = lambda: {
@@ -68,7 +68,7 @@ class JWImageLoadRGB:
 
 
 @register_node("JWImageResize", "Image Resize")
-class JWImageResize:
+class _:
     CATEGORY = "jamesWalker55"
 
     INPUT_TYPES = lambda: {
