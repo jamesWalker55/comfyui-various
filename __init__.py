@@ -10,6 +10,7 @@ NODE_MODULES = [
     ".comfyui_primitive_ops",
     ".comfyui_raft",
     ".comfyui_image_channel_ops",
+    ".comfyui_color_ops",
 ]
 
 
