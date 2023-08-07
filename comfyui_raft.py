@@ -1,6 +1,5 @@
 import comfy.model_management as model_management
 import numpy as np
-import OpenEXR
 import torch
 import torchvision.transforms.functional as F
 from torchvision.models.optical_flow import Raft_Large_Weights, raft_large
@@ -201,6 +200,8 @@ class _:
 def depth_exr_to_numpy(exr_path, typemap={"HALF": np.float16, "FLOAT": np.float32}):
     # Code stolen from:
     # https://gist.github.com/andres-fr/4ddbb300d418ed65951ce88766236f9c
+
+    import OpenEXR
 
     # load EXR and extract shape
     exr = OpenEXR.InputFile(exr_path)

@@ -16,7 +16,7 @@ Go though each file and see which nodes you want to use. Download the correspond
 ComfyUI/custom_nodes
 ```
 
-If you want to use `comfyui_raft.py`, you must install `OpenEXR` in your ComfyUI Python environment.
+If you want to use `RAFTLoadFlowFromEXRChannels` from `comfyui_raft.py`, you must install `OpenEXR` in your ComfyUI Python environment.
 
 ```sh
 # Activate your Python environment first.
