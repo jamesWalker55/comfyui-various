@@ -40,6 +40,8 @@ Each `comfyui_*.py` file contains a group of nodes of similar purpose. This repo
 comfyui_image_ops
   JWImageLoadRGB: Image Load RGB
   JWImageResize: Image Resize
+  JWImageResizeToSquare: Image Resize to Square
+  JWImageResizeByFactor: Image Resize by Factor
 
 comfyui_primitive_ops
   JWInteger: Integer
