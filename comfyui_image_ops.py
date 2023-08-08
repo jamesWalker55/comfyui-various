@@ -162,3 +162,53 @@ class _:
         image = native_torch_to_comfyui(image)
 
         return (image,)
+
+
+@register_node("JWImageResizeByFactor", "Image Resize by Factor")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "factor": ("FLOAT", {"default": 1, "min": 0, "step": 0.01, "max": 99999}),
+            "interpolation_mode": (
+                ["bicubic", "bilinear", "nearest", "nearest exact"],
+            ),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        factor: float,
+        interpolation_mode: str,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(factor, float)
+        assert isinstance(interpolation_mode, str)
+
+        interpolation_mode = interpolation_mode.upper().replace(" ", "_")
+        interpolation_mode = getattr(InterpolationMode, interpolation_mode)
+
+        new_height = round(image.shape[1] * factor)
+        new_width = round(image.shape[2] * factor)
+
+        resizer = torchvision.transforms.Resize(
+            (new_height, new_width),
+            interpolation=interpolation_mode,
+            antialias=True,
+        )
+
+        image = comfyui_to_native_torch(image)
+        image = resizer(image)
+        image = native_torch_to_comfyui(image)
+
+        return (image,)
