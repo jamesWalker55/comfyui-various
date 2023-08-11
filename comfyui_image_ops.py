@@ -36,8 +36,8 @@ def native_torch_to_comfyui(imgs: torch.Tensor):
     return imgs.permute(0, 2, 3, 1)
 
 
-def load_image(path):
-    img = Image.open(path).convert("RGB")
+def load_image(path, convert="RGB"):
+    img = Image.open(path).convert(convert)
     img = np.array(img).astype(np.float32) / 255.0
     img = torch.from_numpy(img).unsqueeze(0)
     return img
@@ -65,6 +65,34 @@ class _:
 
         img = load_image(path)
         return (img,)
+
+
+@register_node("JWImageLoadRGBA", "Image Load RGBA")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "path": ("STRING", {"default": "./image.png"}),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE", "MASK")
+    RETURN_TYPES = ("IMAGE", "MASK")
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, path: str):
+        assert isinstance(path, str)
+
+        img = load_image(path, convert="RGBA")
+        color = img[:, :, :, 0:3]
+        mask = img[0, :, :, 3]
+        mask = 1 - mask  # invert mask
+
+        return (color, mask)
 
 
 @register_node("JWImageResize", "Image Resize")
@@ -115,6 +143,56 @@ class _:
         image = native_torch_to_comfyui(image)
 
         return (image,)
+
+
+@register_node("JWMaskResize", "Mask Resize")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "mask": ("MASK",),
+            "height": ("INT", {"default": 512, "min": 0, "step": 1, "max": 99999}),
+            "width": ("INT", {"default": 512, "min": 0, "step": 1, "max": 99999}),
+            "interpolation_mode": (
+                ["bicubic", "bilinear", "nearest", "nearest exact"],
+            ),
+        }
+    }
+
+    RETURN_NAMES = ("MASK",)
+    RETURN_TYPES = ("MASK",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        mask: torch.Tensor,
+        width: int,
+        height: int,
+        interpolation_mode: str,
+    ):
+        assert isinstance(mask, torch.Tensor)
+        assert isinstance(height, int)
+        assert isinstance(width, int)
+        assert isinstance(interpolation_mode, str)
+
+        interpolation_mode = interpolation_mode.upper().replace(" ", "_")
+        interpolation_mode = getattr(InterpolationMode, interpolation_mode)
+
+        resizer = torchvision.transforms.Resize(
+            (height, width),
+            interpolation=interpolation_mode,
+            antialias=True,
+        )
+
+        mask = mask.unsqueeze(0)
+        mask = resizer(mask)
+        mask = mask[0]
+
+        return (mask,)
 
 
 @register_node("JWImageResizeToSquare", "Image Resize to Square")
