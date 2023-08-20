@@ -178,7 +178,7 @@ def _(
 
 
 @generate_functional_node("jamesWalker55", "JWFloatToString", "Float to String")
-def _(value: int = 0, format_string: str = "{:.6g}") -> tuple[str]:
+def _(value: float = 0, format_string: str = "{:.6g}") -> tuple[str]:
     return (format_string.format(value),)
 
 
