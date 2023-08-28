@@ -11,6 +11,7 @@ NODE_MODULES = [
     ".comfyui_raft",
     ".comfyui_image_channel_ops",
     ".comfyui_color_ops",
+    ".comfyui_datetime",
 ]
 
 # Extra nodes for my own use
