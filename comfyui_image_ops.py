@@ -373,3 +373,106 @@ class _:
         image = native_torch_to_comfyui(image)
 
         return (image,)
+
+
+@register_node("JWImageResizeByShorterSide", "Image Resize by Shorter Side")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "size": ("INT", {"default": 512, "min": 0, "step": 1, "max": 99999}),
+            "interpolation_mode": (
+                ["bicubic", "bilinear", "nearest", "nearest exact"],
+            ),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        size: int,
+        interpolation_mode: str,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(size, int)
+        assert isinstance(interpolation_mode, str)
+
+        interpolation_mode = interpolation_mode.upper().replace(" ", "_")
+        interpolation_mode = getattr(InterpolationMode, interpolation_mode)
+
+        resizer = torchvision.transforms.Resize(
+            size,
+            interpolation=interpolation_mode,
+            antialias=True,
+        )
+
+        image = comfyui_to_native_torch(image)
+        image = resizer(image)
+        image = native_torch_to_comfyui(image)
+
+        return (image,)
+
+
+@register_node("JWImageResizeByLongerSide", "Image Resize by Longer Side")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "size": ("INT", {"default": 512, "min": 0, "step": 1, "max": 99999}),
+            "interpolation_mode": (
+                ["bicubic", "bilinear", "nearest", "nearest exact"],
+            ),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        size: int,
+        interpolation_mode: str,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(size, int)
+        assert isinstance(interpolation_mode, str)
+
+        interpolation_mode = interpolation_mode.upper().replace(" ", "_")
+        interpolation_mode = getattr(InterpolationMode, interpolation_mode)
+
+        _, h, w, _ = image.shape
+
+        if h >= w:
+            new_h = size
+            new_w = round(w * new_h / h)
+        else:  # h < w
+            new_w = size
+            new_h = round(h * new_w / w)
+
+        resizer = torchvision.transforms.Resize(
+            (new_w, new_h),
+            interpolation=interpolation_mode,
+            antialias=True,
+        )
+
+        image = comfyui_to_native_torch(image)
+        image = resizer(image)
+        image = native_torch_to_comfyui(image)
+
+        return (image,)
