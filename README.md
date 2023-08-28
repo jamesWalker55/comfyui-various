@@ -45,6 +45,8 @@ comfyui_image_ops
   JWMaskResize: Mask Resize
   JWImageResizeToSquare: Image Resize to Square
   JWImageResizeByFactor: Image Resize by Factor
+  JWImageResizeByShorterSide: Image Resize by Shorter Side
+  JWImageResizeByLongerSide: Image Resize by Longer Side
 
 comfyui_primitive_ops
   JWInteger: Integer
@@ -86,6 +88,11 @@ comfyui_color_ops
 
 comfyui_datetime
   JWDatetimeString: Datetime String
+
+comfyui_image_sequence
+  JWLoadImageSequence: Batch Load Image Sequence
+  JWSaveImageSequence: Batch Save Image Sequence
+  JWLoopImageSequence: Loop Image Sequence
 ```
 
 ### Other nodes
