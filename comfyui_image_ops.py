@@ -4,7 +4,6 @@ from pathlib import Path
 
 import numpy as np
 import torch
-import torchvision
 import torchvision.transforms.functional as F
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
@@ -215,15 +214,14 @@ class _:
         interpolation_mode = interpolation_mode.upper().replace(" ", "_")
         interpolation_mode = getattr(InterpolationMode, interpolation_mode)
 
-        resizer = torchvision.transforms.Resize(
+        image = image.permute(0, 3, 1, 2)
+        image = F.resize(
+            image,
             (height, width),
             interpolation=interpolation_mode,
             antialias=True,
         )
-
-        image = comfyui_to_native_torch(image)
-        image = resizer(image)
-        image = native_torch_to_comfyui(image)
+        image = image.permute(0, 2, 3, 1)
 
         return (image,)
 
@@ -265,14 +263,13 @@ class _:
         interpolation_mode = interpolation_mode.upper().replace(" ", "_")
         interpolation_mode = getattr(InterpolationMode, interpolation_mode)
 
-        resizer = torchvision.transforms.Resize(
+        mask = mask.unsqueeze(0)
+        image = F.resize(
+            image,
             (height, width),
             interpolation=interpolation_mode,
             antialias=True,
         )
-
-        mask = mask.unsqueeze(0)
-        mask = resizer(mask)
         mask = mask[0]
 
         return (mask,)
@@ -312,15 +309,14 @@ class _:
         interpolation_mode = interpolation_mode.upper().replace(" ", "_")
         interpolation_mode = getattr(InterpolationMode, interpolation_mode)
 
-        resizer = torchvision.transforms.Resize(
+        image = image.permute(0, 3, 1, 2)
+        image = F.resize(
+            image,
             (size, size),
             interpolation=interpolation_mode,
             antialias=True,
         )
-
-        image = comfyui_to_native_torch(image)
-        image = resizer(image)
-        image = native_torch_to_comfyui(image)
+        image = image.permute(0, 2, 3, 1)
 
         return (image,)
 
@@ -362,15 +358,14 @@ class _:
         new_height = round(image.shape[1] * factor)
         new_width = round(image.shape[2] * factor)
 
-        resizer = torchvision.transforms.Resize(
+        image = image.permute(0, 3, 1, 2)
+        image = F.resize(
+            image,
             (new_height, new_width),
             interpolation=interpolation_mode,
             antialias=True,
         )
-
-        image = comfyui_to_native_torch(image)
-        image = resizer(image)
-        image = native_torch_to_comfyui(image)
+        image = image.permute(0, 2, 3, 1)
 
         return (image,)
 
@@ -409,15 +404,14 @@ class _:
         interpolation_mode = interpolation_mode.upper().replace(" ", "_")
         interpolation_mode = getattr(InterpolationMode, interpolation_mode)
 
-        resizer = torchvision.transforms.Resize(
+        image = image.permute(0, 3, 1, 2)
+        image = F.resize(
+            image,
             size,
             interpolation=interpolation_mode,
             antialias=True,
         )
-
-        image = comfyui_to_native_torch(image)
-        image = resizer(image)
-        image = native_torch_to_comfyui(image)
+        image = image.permute(0, 2, 3, 1)
 
         return (image,)
 
@@ -465,14 +459,13 @@ class _:
             new_w = size
             new_h = round(h * new_w / w)
 
-        resizer = torchvision.transforms.Resize(
+        image = image.permute(0, 3, 1, 2)
+        image = F.resize(
+            image,
             (new_w, new_h),
             interpolation=interpolation_mode,
             antialias=True,
         )
-
-        image = comfyui_to_native_torch(image)
-        image = resizer(image)
-        image = native_torch_to_comfyui(image)
+        image = image.permute(0, 2, 3, 1)
 
         return (image,)
