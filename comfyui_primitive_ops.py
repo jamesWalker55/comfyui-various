@@ -244,3 +244,26 @@ def _(a: str = "", b: str = "") -> tuple[str]:
 @generate_functional_node("jamesWalker55", "JWStringReplace", "String Replace")
 def _(source: str = "", to_replace: str = "", replace_with: str = "") -> tuple[str]:
     return (source.replace(to_replace, replace_with),)
+
+
+@generate_functional_node("jamesWalker55", "JWStringSplit", "String Split")
+def _(
+    source: str = "a,b",
+    split_by: str = ",",
+    from_right: Literal["false", "true"] = None,
+) -> tuple[str, str]:
+    from_right = from_right == "true"
+    if from_right:
+        splits = source.rsplit(split_by, 1)
+    else:
+        splits = source.split(split_by, 1)
+    match splits:
+        case a, b:
+            return (a, b)
+        case a:
+            return (a, "")
+
+
+@generate_functional_node("jamesWalker55", "JWStringGetLine", "String Get Line")
+def _(source: str = "", line_index: int = 0) -> tuple[str]:
+    return (source.splitlines()[line_index],)
