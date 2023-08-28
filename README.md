@@ -39,7 +39,10 @@ Each `comfyui_*.py` file contains a group of nodes of similar purpose. This repo
 ```
 comfyui_image_ops
   JWImageLoadRGB: Image Load RGB
+  JWImageLoadRGBA: Image Load RGBA
+  JWImageSaveToPath: Image Save To Path
   JWImageResize: Image Resize
+  JWMaskResize: Mask Resize
   JWImageResizeToSquare: Image Resize to Square
   JWImageResizeByFactor: Image Resize by Factor
 
@@ -51,6 +54,7 @@ comfyui_primitive_ops
   JWIntegerSub: Integer Subtract
   JWIntegerMul: Integer Multiply
   JWIntegerDiv: Integer Divide
+  JWIntegerAbsolute: Integer Absolute Value
   JWFloat: Float
   JWFloatToInteger: Float to Integer
   JWFloatToString: Float to String
@@ -58,12 +62,15 @@ comfyui_primitive_ops
   JWFloatSub: Float Subtract
   JWFloatMul: Float Multiply
   JWFloatDiv: Float Divide
+  JWFloatAbsolute: Float Absolute Value
   JWString: String
   JWStringToInteger: String to Integer
   JWStringToFloat: String to Float
   JWStringMultiline: String (Multiline)
   JWStringConcat: String Concatenate
   JWStringReplace: String Replace
+  JWStringSplit: String Split
+  JWStringGetLine: String Get Line
 
 comfyui_raft
   RAFTEstimate: RAFT Estimate
@@ -72,9 +79,13 @@ comfyui_raft
 
 comfyui_image_channel_ops
   JWImageStackChannels: Image Stack Channels
+  JWImageExtractFromBatch: Image Extract From Batch
 
 comfyui_color_ops
   JWImageMix: Image Mix
+
+comfyui_datetime
+  JWDatetimeString: Datetime String
 ```
 
 ### Other nodes
