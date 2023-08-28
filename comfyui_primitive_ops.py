@@ -42,8 +42,8 @@ def generate_functional_node(
                     "INT",
                     {
                         "default": param.default,
-                        "min": -99999999999999999,
-                        "max": 99999999999999999,
+                        "min": -0xFFFFFFFFFFFFFFFF,
+                        "max": 0xFFFFFFFFFFFFFFFF,
                     },
                 )
             elif param_type is float:
