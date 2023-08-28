@@ -39,4 +39,5 @@ class _:
     def IS_CHANGED(cls, *args):
         # This value will be compared with previous 'IS_CHANGED' outputs
         # If inequal, then this node will be considered as modified
-        return object()
+        # NaN is never equal to itself
+        return float("NaN")
