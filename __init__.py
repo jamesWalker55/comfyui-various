@@ -24,6 +24,7 @@ if (
             ".comfyui_batch_io",
             ".comfyui_group_io",
             ".comfyui_cn_preprocessors",
+            ".comfyui_jw",
         ]
     )
 
