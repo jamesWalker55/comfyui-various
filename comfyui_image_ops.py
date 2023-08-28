@@ -23,24 +23,6 @@ def register_node(identifier: str, display_name: str):
     return decorator
 
 
-def comfyui_to_native_torch(imgs: torch.Tensor):
-    """
-    Convert images in NHWC format to NCHW format.
-
-    Use this to convert ComfyUI images to torch-native images.
-    """
-    return imgs.permute(0, 3, 1, 2)
-
-
-def native_torch_to_comfyui(imgs: torch.Tensor):
-    """
-    Convert images in NCHW format to NHWC format.
-
-    Use this to convert torch-native images to ComfyUI images.
-    """
-    return imgs.permute(0, 2, 3, 1)
-
-
 def load_image(path, convert="RGB"):
     img = Image.open(path).convert(convert)
     img = np.array(img).astype(np.float32) / 255.0
