@@ -64,7 +64,11 @@ def generate_functional_node(
 
                 required_inputs[name] = (
                     "STRING",
-                    {"default": param.default, "multiline": multiline_string},
+                    {
+                        "default": param.default,
+                        "multiline": multiline_string,
+                        "dynamicPrompts": False,
+                    },
                 )
             elif isinstance(param_type, str):
                 if has_default:

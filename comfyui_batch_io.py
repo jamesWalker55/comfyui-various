@@ -118,7 +118,7 @@ class _:
             "render_video_fps": ("INT", {"default": 8, "min": 0, "step": 1}),
         },
         "optional": {
-            "filenames": ("STRING", {"multiline": True}),
+            "filenames": ("STRING", {"multiline": True, "dynamicPrompts": False}),
         },
         "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
     }

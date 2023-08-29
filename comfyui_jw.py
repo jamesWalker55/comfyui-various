@@ -70,3 +70,27 @@ class ReferenceOnlySimple:
             model_reference,
             {"samples": out_latent, "noise_mask": torch.cat((out_mask, mask))},
         )
+
+
+@register_node("JWMultilineTest", "James: Multiline Test")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "text": ("STRING", {"multiline": True, "dynamicPrompts": False}),
+        }
+    }
+
+    RETURN_TYPES = ()
+
+    OUTPUT_NODE = True
+
+    FUNCTION = "execute"
+
+    def execute(self, text: str):
+        from pprint import pprint, pformat
+
+        pprint(text)
+
+        raise RuntimeError(pformat(text))
