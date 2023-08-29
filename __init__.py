@@ -13,6 +13,7 @@ NODE_MODULES = [
     ".comfyui_color_ops",
     ".comfyui_datetime",
     ".comfyui_image_sequence",
+    ".comfyui_mask_sequence_ops",
 ]
 
 # Extra nodes for my own use

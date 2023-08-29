@@ -257,6 +257,40 @@ class _:
         return (mask,)
 
 
+@register_node("JWMaskLikeImageSize", "Mask Like Image Size")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "value": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
+        }
+    }
+
+    RETURN_NAMES = ("MASK",)
+    RETURN_TYPES = ("MASK",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        value: float,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(value, float)
+
+        mask_shape = (image.shape[-2], image.shape[-1])
+        # code copied from:
+        # comfy_extras\nodes_mask.py
+        mask = torch.full(mask_shape, value, dtype=torch.float32, device="cpu")
+
+        return (mask,)
+
+
 @register_node("JWImageResizeToSquare", "Image Resize to Square")
 class _:
     CATEGORY = "jamesWalker55"
