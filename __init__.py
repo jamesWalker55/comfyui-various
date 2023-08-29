@@ -26,6 +26,7 @@ if (
             ".comfyui_group_io",
             ".comfyui_cn_preprocessors",
             ".comfyui_jw",
+            ".comfyui_info_hash",
         ]
     )
 
