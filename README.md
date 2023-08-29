@@ -43,6 +43,7 @@ comfyui_image_ops
   JWImageSaveToPath: Image Save To Path
   JWImageResize: Image Resize
   JWMaskResize: Mask Resize
+  JWMaskLikeImageSize: Mask Like Image Size
   JWImageResizeToSquare: Image Resize to Square
   JWImageResizeByFactor: Image Resize by Factor
   JWImageResizeByShorterSide: Image Resize by Shorter Side
@@ -93,6 +94,11 @@ comfyui_image_sequence
   JWLoadImageSequence: Batch Load Image Sequence
   JWSaveImageSequence: Batch Save Image Sequence
   JWLoopImageSequence: Loop Image Sequence
+
+comfyui_mask_sequence_ops
+  JWMaskSequenceFromMask: Mask Sequence From Sequence
+  JWMaskSequenceJoin: Join Mask Sequence
+  JWMaskSequenceApplyToLatent: Apply Mask Sequence to Latent
 ```
 
 ### Other nodes
