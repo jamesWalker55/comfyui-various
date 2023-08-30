@@ -201,6 +201,7 @@ class _:
             "images": ("IMAGE",),
             "i_start": ("INT", {"default": 0, "min": 0, "step": 1}),
             "i_stop": ("INT", {"default": 0, "min": 0, "step": 1}),
+            "inclusive": (("false", "true"), {"default": "false"}),
         }
     }
 
@@ -211,12 +212,15 @@ class _:
 
     FUNCTION = "execute"
 
-    def execute(self, images: torch.Tensor, i_start: int, i_stop: int):
+    def execute(self, images: torch.Tensor, i_start: int, i_stop: int, inclusive: str):
         assert isinstance(images, torch.Tensor)
         assert isinstance(i_start, int)
         assert isinstance(i_stop, int)
+        assert isinstance(inclusive, str)
 
-        img = images[i_start:i_stop]
+        inclusive: bool = inclusive == "true"
+
+        img = images[i_start : i_stop + 1 if inclusive else i_stop]
 
         return (img,)
 

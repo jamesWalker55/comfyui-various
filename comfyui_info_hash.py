@@ -155,13 +155,13 @@ class _:
 
 def calculate_batches(
     i_start: int,  # start of i
-    i_stop: int,  # end of i, includes end
+    i_stop: int,  # end of i, excludes end
     range_starts: int,  # scene cuts, batch will be terminated before this
     max_batch_size: int,  # maximum length of batch
 ):
     """
     :param int i_start: start of i
-    :param int i_stop: end of i, includes end
+    :param int i_stop: end of i, excludes end
     :param int range_starts: scene cuts, batch will be terminated before this
     :param int max_batch_size: maximum length of batch
     :return: a list of 2-tuples, each represents (batch start frame, batch stop frame), where stop frame is exclusive
@@ -172,7 +172,7 @@ def calculate_batches(
     while True:
         i += 1
         counter += 1
-        if i > i_stop:
+        if i >= i_stop:
             batch_starts.append(i)
             break
 
@@ -213,6 +213,7 @@ class _:
                 "INT",
                 {"default": 16, "min": 1, "step": 1, "max": 999999},
             ),
+            "inclusive": (("false", "true"), {"default": "false"}),
         }
     }
 
@@ -231,7 +232,10 @@ class _:
         i_start: int,
         i_stop: int,
         max_batch_size: int,
+        inclusive: str,
     ):
+        inclusive: bool = inclusive == "true"
+
         config = yaml.safe_load(config)
 
         info = RangedConfig(config, range_key=ranges_key)
@@ -239,7 +243,9 @@ class _:
         range_starts = set(info.get_ranges())
 
         # get images in selected batch
-        batches = calculate_batches(i_start, i_stop, range_starts, max_batch_size)
+        batches = calculate_batches(
+            i_start, i_stop + 1 if inclusive else i_stop, range_starts, max_batch_size
+        )
         batch = batches[batch_idx]
 
         return (batch[0], batch[1])
@@ -267,6 +273,7 @@ class _:
                 "INT",
                 {"default": 16, "min": 1, "step": 1, "max": 999999},
             ),
+            "inclusive": (("false", "true"), {"default": "false"}),
         }
     }
 
@@ -286,7 +293,10 @@ class _:
         i_start: int,
         i_stop: int,
         max_batch_size: int,
+        inclusive: str,
     ):
+        inclusive: bool = inclusive == "true"
+
         config = yaml.safe_load(config)
 
         info = RangedConfig(config, range_key=ranges_key)
@@ -294,7 +304,9 @@ class _:
         range_starts = set(info.get_ranges())
 
         # get images in selected batch
-        batches = calculate_batches(i_start, i_stop, range_starts, max_batch_size)
+        batches = calculate_batches(
+            i_start, i_stop + 1 if inclusive else i_stop, range_starts, max_batch_size
+        )
         batch = batches[batch_idx]
 
         print(f"Getting images in batch: {batch}")
