@@ -159,6 +159,33 @@ class _:
         return ()
 
 
+@register_node("JWImageExtractFromBatch", "Image Extract From Batch")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "images": ("IMAGE",),
+            "index": ("INT", {"default": 0, "min": 0, "step": 1}),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, images: torch.Tensor, index: int):
+        assert isinstance(images, torch.Tensor)
+        assert isinstance(index, int)
+
+        img = images[index].unsqueeze(0)
+
+        return (img,)
+
+
 @register_node("JWImageResize", "Image Resize")
 class _:
     CATEGORY = "jamesWalker55"
