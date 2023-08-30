@@ -125,6 +125,7 @@ class _:
                     "dynamicPrompts": False,
                 },
             ),
+            "ignore_missing_images": (("false", "true"), {"default": "false"}),
         }
     }
 
@@ -135,14 +136,26 @@ class _:
 
     FUNCTION = "execute"
 
-    def execute(self, paths):
+    def execute(self, paths, ignore_missing_images: str):
         assert isinstance(paths, str)
+        assert isinstance(ignore_missing_images, str)
+
+        ignore_missing_images: bool = ignore_missing_images == "true"
+
         paths = [p.strip() for p in paths.splitlines()]
         paths = [p for p in paths if len(p) != 0]
 
-        for path in paths:
-            if not os.path.exists(path):
-                raise FileNotFoundError(f"Image does not exist: {path}")
+        if ignore_missing_images:
+            # remove missing images
+            paths = [p for p in paths if os.path.exists(p)]
+        else:
+            # early check for missing images
+            for path in paths:
+                if not os.path.exists(path):
+                    raise FileNotFoundError(f"Image does not exist: {path}")
+
+        if len(paths) == 0:
+            raise RuntimeError("Image sequence empty - no images to load")
 
         imgs = []
         for path in paths:
