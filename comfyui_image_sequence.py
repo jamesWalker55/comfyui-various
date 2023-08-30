@@ -273,7 +273,10 @@ class _:
         image_range = range(start_index, start_index + len(images))
 
         for i, img in zip(image_range, images):
-            path = Path(path_pattern.format(i))
+            try:
+                path = Path(path_pattern.format(i))
+            except KeyError:
+                path = Path(path_pattern.format(i=i))
 
             # Create containing folder for output path
             path.parent.mkdir(exist_ok=True)
