@@ -29,6 +29,7 @@ if (
             ".comfyui_jw",
             ".comfyui_info_hash",
             ".comfyui_debug",
+            ".comfyui_string_list",
         ]
     )
 
