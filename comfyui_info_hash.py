@@ -344,7 +344,7 @@ class _:
     FUNCTION = "execute"
 
     def execute(self, info_hash: dict):
-        from pprint import pprint, pformat
+        from pprint import pformat, pprint
 
         pprint(info_hash)
         raise ValueError(pformat(info_hash))
