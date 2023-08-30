@@ -28,6 +28,7 @@ if (
             ".comfyui_cn_preprocessors",
             ".comfyui_jw",
             ".comfyui_info_hash",
+            ".comfyui_debug",
         ]
     )
 
