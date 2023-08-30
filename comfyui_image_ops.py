@@ -334,7 +334,8 @@ class _:
         assert isinstance(image, torch.Tensor)
         assert isinstance(value, float)
 
-        mask_shape = (image.shape[-2], image.shape[-1])
+        _, h, w, _ = image.shape
+        mask_shape = (h, w)
         # code copied from:
         # comfy_extras\nodes_mask.py
         mask = torch.full(mask_shape, value, dtype=torch.float32, device="cpu")
