@@ -14,7 +14,7 @@ def register_node(identifier: str, display_name: str):
     return decorator
 
 
-@register_node("JWMaskSequenceFromMask", "Mask Sequence From Sequence")
+@register_node("JWMaskSequenceFromMask", "Mask Sequence From Mask")
 class _:
     CATEGORY = "jamesWalker55"
 
