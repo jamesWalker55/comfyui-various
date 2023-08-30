@@ -83,6 +83,7 @@ class _:
     Set the strength of the previously-added ControlNet, number of values must be
     equal to batch size.
     """
+
     CATEGORY = "jamesWalker55"
     INPUT_TYPES = lambda: {
         "required": {
@@ -107,7 +108,8 @@ class _:
         strengths,
     ):
         strengths = [float(x.strip()) for x in strengths.split(",")]
-        strengths = torch.tensor(strengths)
+        strengths = torch.tensor(strengths).reshape((-1, 1, 1, 1))
+        strengths = torch.cat((strengths, strengths))
         strengths = strengths.to("cuda")
 
         new_conditioning = []
