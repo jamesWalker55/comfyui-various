@@ -135,9 +135,10 @@ class _:
 
     FUNCTION = "execute"
 
-    def execute(self, paths: str):
+    def execute(self, paths):
+        assert isinstance(paths, str)
         paths = [p.strip() for p in paths.splitlines()]
-        paths = [p for p in paths.splitlines() if len(p) != 0]
+        paths = [p for p in paths if len(p) != 0]
 
         for path in paths:
             if not os.path.exists(path):
