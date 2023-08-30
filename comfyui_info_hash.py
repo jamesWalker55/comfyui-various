@@ -153,6 +153,45 @@ class _:
         return (info.get_sub_prompt(i),)
 
 
+@register_node("JWInfoHashListFromRangedInfo", "Info Hash List From Ranged Config")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "config": (
+                "STRING",
+                {"default": DEFAULT_CONFIG, "multiline": True, "dynamicPrompts": False},
+            ),
+            "i_start": ("INT", {"default": 0, "min": 0, "step": 1, "max": 999999}),
+            "i_stop": ("INT", {"default": 16, "min": 0, "step": 1, "max": 999999}),
+            "ranges_key": ("STRING", {"default": "ranges", "multiline": False}),
+            "inclusive": (("false", "true"), {"default": "false"}),
+        }
+    }
+
+    RETURN_TYPES = ("INFO_HASH_LIST",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self, config: str, i_start: int, i_stop: int, ranges_key: str, inclusive: str
+    ):
+        inclusive: bool = inclusive == "true"
+
+        config = yaml.safe_load(config)
+
+        info = RangedConfig(config, range_key=ranges_key)
+        subinfos = [
+            info.get_sub_prompt(i)
+            for i in range(i_start, i_stop + 1 if inclusive else i_stop)
+        ]
+
+        return (subinfos,)
+
+
 def calculate_batches(
     i_start: int,  # start of i
     i_stop: int,  # end of i, excludes end
@@ -387,6 +426,49 @@ class _:
     def execute(self, info_hash: dict, key: str):
         val = str(info_hash[key])
         return (val,)
+
+
+@register_node("JWInfoHashListExtractStringList", "Info Hash List Extract String List")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "info_hash_list": ("INFO_HASH_LIST",),
+            "key": ("STRING", {"default": "p", "multiline": False}),
+        }
+    }
+
+    RETURN_TYPES = ("STRING_LIST",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, info_hash_list: list[dict], key: str):
+        val = [str(info_hash[key]) for info_hash in info_hash_list]
+        return (val,)
+
+
+@register_node("JWInfoHashFromInfoHashList", "Extract Info Hash From Info Hash List")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "info_hash_list": ("INFO_HASH_LIST",),
+            "i": ("INT", {"default": 0, "step": 1, "min": -99999999, "max": 99999999}),
+        }
+    }
+
+    RETURN_TYPES = ("INFO_HASH",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, info_hash_list: list[dict], i: int):
+        return (info_hash_list[i],)
 
 
 @register_node("JWInfoHashPrint", "Print Info Hash (Debug)")
