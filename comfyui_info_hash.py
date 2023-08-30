@@ -24,6 +24,13 @@ def register_node(identifier: str, display_name: str):
     return decorator
 
 
+def load_image(path, convert="RGB"):
+    img = Image.open(path).convert(convert)
+    img = np.array(img).astype(np.float32) / 255.0
+    img = torch.from_numpy(img).unsqueeze(0)
+    return img
+
+
 class RangedConfig:
     def __init__(self, definition: dict[str, Any], range_key: str = "ranges") -> None:
         self.definition = definition
@@ -50,6 +57,9 @@ class RangedConfig:
                 if v is None:
                     v = ""
                 assert isinstance(v, (int, float, str)), f"{type(v)!r}"
+
+    def get_ranges(self):
+        return sorted(self.definition[self.range_key].keys())
 
     def _get_range_start(self, i: int) -> int | None:
         if len(self.definition[self.range_key]) == 0:
@@ -141,6 +151,114 @@ class _:
         info = RangedConfig(config, range_key=ranges_key)
 
         return (info.get_sub_prompt(i),)
+
+
+def calculate_batches(
+    i_start: int,  # start of i
+    i_stop: int,  # end of i, includes end
+    range_starts: int,  # scene cuts, batch will be terminated before this
+    max_batch_size: int,  # maximum length of batch
+):
+    """
+    :param int i_start: start of i
+    :param int i_stop: end of i, includes end
+    :param int range_starts: scene cuts, batch will be terminated before this
+    :param int max_batch_size: maximum length of batch
+    :return: a list of 2-tuples, each represents (batch start frame, batch stop frame), where stop frame is exclusive
+    """
+    batch_starts: list[int] = []  # also includes end frame
+    i = i_start - 1
+    counter = -1
+    while True:
+        i += 1
+        counter += 1
+        if i > i_stop:
+            batch_starts.append(i)
+            break
+
+        if i in range_starts:
+            batch_starts.append(i)
+            counter = 0
+            continue
+
+        if counter >= max_batch_size:
+            batch_starts.append(i)
+            counter = 0
+            continue
+
+        if counter == 0:
+            batch_starts.append(i)
+            continue
+
+    batches = list(zip(batch_starts[:-1], batch_starts[1:]))
+
+    return batches
+
+
+@register_node(
+    "JWInfoHashFromRangedInfoAndLoadSubsequences",
+    "Info Hash From Ranged Config and Load Batch",
+)
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "config": (
+                "STRING",
+                {"default": DEFAULT_CONFIG, "multiline": True, "dynamicPrompts": False},
+            ),
+            "ranges_key": ("STRING", {"default": "ranges", "multiline": False}),
+            "path_key": ("STRING", {"default": "path", "multiline": False}),
+            "batch_idx": ("INT", {"default": 0, "min": 0, "step": 1, "max": 999999}),
+            "i_start": ("INT", {"default": 1, "min": 0, "step": 1, "max": 999999}),
+            "i_stop": ("INT", {"default": 100, "min": 0, "step": 1, "max": 999999}),
+            "max_batch_size": (
+                "INT",
+                {"default": 16, "min": 1, "step": 1, "max": 999999},
+            ),
+        }
+    }
+
+    RETURN_NAMES = ("INFO_HASH", "IMAGE", "BATCH_I_START", "BATCH_I_STOP")
+    RETURN_TYPES = ("INFO_HASH", "IMAGE", "INT", "INT")
+
+    OUTPUT_NODE = True
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        config: str,
+        ranges_key: str,
+        path_key: str,
+        batch_idx: int,
+        i_start: int,
+        i_stop: int,
+        max_batch_size: int,
+    ):
+        config = yaml.safe_load(config)
+
+        info = RangedConfig(config, range_key=ranges_key)
+
+        range_starts = set(info.get_ranges())
+
+        # get images in selected batch
+        batches = calculate_batches(i_start, i_stop, range_starts, max_batch_size)
+        batch = batches[batch_idx]
+
+        print(f"Getting images in batch: {batch}")
+
+        images = []
+        for i in range(batch[0], batch[1]):
+            subinfo = info.get_sub_prompt(i)
+            path = subinfo[path_key]
+            print(f"  Loading: {path}")
+            img = load_image(path)
+            images.append(img)
+        images = torch.cat(images, dim=0)
+
+        return (info.get_sub_prompt(batch[0]), images, batch[0], batch[1])
 
 
 @register_node("JWInfoHashExtractInteger", "Info Hash Extract Integer")

@@ -186,6 +186,30 @@ class _:
         return (img,)
 
 
+@register_node("JWImageBatchCount", "Get Image Batch Count")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "images": ("IMAGE",),
+        }
+    }
+
+    RETURN_TYPES = ("INT",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, images: torch.Tensor):
+        assert isinstance(images, torch.Tensor)
+
+        batch_count = len(images)
+
+        return (batch_count,)
+
+
 @register_node("JWImageResize", "Image Resize")
 class _:
     CATEGORY = "jamesWalker55"
