@@ -169,6 +169,16 @@ def _(value: int = 0) -> tuple[int]:
     return (abs(value),)
 
 
+@generate_functional_node("jamesWalker55", "JWIntegerMin", "Integer Minimum")
+def _(a: int = 0, b: int = 0) -> tuple[int]:
+    return (min(a, b),)
+
+
+@generate_functional_node("jamesWalker55", "JWIntegerMax", "Integer Maximum")
+def _(a: int = 0, b: int = 0) -> tuple[int]:
+    return (min(a, b),)
+
+
 @generate_functional_node("jamesWalker55", "JWFloat", "Float")
 def _(value: float = 0) -> tuple[float]:
     return (value,)
@@ -216,6 +226,16 @@ def _(a: float = 0, b: float = 0) -> tuple[float]:
 @generate_functional_node("jamesWalker55", "JWFloatAbsolute", "Float Absolute Value")
 def _(value: float = 0) -> tuple[float]:
     return (abs(value),)
+
+
+@generate_functional_node("jamesWalker55", "JWFloatMin", "Float Minimum")
+def _(a: float = 0, b: float = 0) -> tuple[float]:
+    return (min(a, b),)
+
+
+@generate_functional_node("jamesWalker55", "JWFloatMax", "Float Maximum")
+def _(a: float = 0, b: float = 0) -> tuple[float]:
+    return (min(a, b),)
 
 
 @generate_functional_node("jamesWalker55", "JWString", "String")
