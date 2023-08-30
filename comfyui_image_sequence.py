@@ -235,6 +235,35 @@ def save_image(img: torch.Tensor, path, prompt=None, extra_pnginfo: dict = None)
     img.save(path, pnginfo=metadata, compress_level=4)
 
 
+@register_node("JWImageSequenceExtractFromBatch", "Extract Image Sequence From Batch")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "images": ("IMAGE",),
+            "i_start": ("INT", {"default": 0, "min": 0, "step": 1}),
+            "i_stop": ("INT", {"default": 0, "min": 0, "step": 1}),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(self, images: torch.Tensor, i_start: int, i_stop: int):
+        assert isinstance(images, torch.Tensor)
+        assert isinstance(i_start, int)
+        assert isinstance(i_stop, int)
+
+        img = images[i_start:i_stop]
+
+        return (img,)
+
+
 @register_node("JWSaveImageSequence", "Batch Save Image Sequence")
 class _:
     CATEGORY = "jamesWalker55"
