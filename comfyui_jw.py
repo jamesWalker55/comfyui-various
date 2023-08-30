@@ -1,3 +1,5 @@
+from typing import Any
+
 import torch
 
 NODE_CLASS_MAPPINGS = {}
@@ -72,25 +74,51 @@ class ReferenceOnlySimple:
         )
 
 
-@register_node("JWMultilineTest", "James: Multiline Test")
+@register_node(
+    "JWSetLastControlNetStrengthForBatch",
+    "Set Last ControlNet Strength For Batch",
+)
 class _:
+    """
+    Set the strength of the previously-added ControlNet, number of values must be
+    equal to batch size.
+    """
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
-            "text": ("STRING", {"multiline": True, "dynamicPrompts": False}),
+            "conditioning": ("CONDITIONING",),
+            "strengths": (
+                "STRING",
+                {
+                    "default": "0.25, 0.5, 0.75, 1.0",
+                    "multiline": True,
+                    "dynamicPrompts": False,
+                },
+            ),
         }
     }
-
-    RETURN_TYPES = ()
-
+    RETURN_TYPES = ("CONDITIONING",)
     OUTPUT_NODE = True
-
     FUNCTION = "execute"
 
-    def execute(self, text: str):
-        from pprint import pprint, pformat
+    def execute(
+        self,
+        conditioning: list[list[torch.Tensor | dict[str, Any]]],
+        strengths,
+    ):
+        strengths = [float(x.strip()) for x in strengths.split(",")]
+        strengths = torch.tensor(strengths)
+        strengths = strengths.to("cuda")
 
-        pprint(text)
+        new_conditioning = []
+        for old_cond in conditioning:
+            cond = old_cond.copy()
+            cond[1] = cond[1].copy()
 
-        raise RuntimeError(pformat(text))
+            if cond[1].get("control", None):
+                # new_cond[1]["control"]: comfy.controlnet.ControlNet
+                cond[1]["control"].strength = strengths
+
+            new_conditioning.append(cond)
+
+        return (new_conditioning,)
