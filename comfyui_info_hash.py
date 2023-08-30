@@ -134,7 +134,7 @@ class _:
                 "STRING",
                 {"default": DEFAULT_CONFIG, "multiline": True, "dynamicPrompts": False},
             ),
-            "i": ("INT", {"default": 1, "min": 0, "step": 1, "max": 9999}),
+            "i": ("INT", {"default": 1, "min": 0, "step": 1, "max": 999999}),
             "ranges_key": ("STRING", {"default": "ranges", "multiline": False}),
         }
     }
