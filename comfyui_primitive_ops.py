@@ -271,3 +271,13 @@ def _(
 @generate_functional_node("jamesWalker55", "JWStringGetLine", "String Get Line")
 def _(source: str = "", line_index: int = 0) -> tuple[str]:
     return (source.splitlines()[line_index],)
+
+
+@generate_functional_node("jamesWalker55", "JWStringUnescape", "String Unescape")
+def _(text: str = "") -> tuple[str]:
+    """parses '\\n' literals in a string to actual '\n' characters"""
+    # convert to bytes, while converting unicode to escaped literals
+    text_bytes = text.encode("ascii", "backslashreplace")
+    # convert back to string, parsing backslash escapes
+    text = text_bytes.decode("unicode-escape")
+    return (text,)
