@@ -195,6 +195,56 @@ def calculate_batches(
     return batches
 
 
+@register_node("JWRangedInfoCalculateSubBatch", "Calculate Sub Batch for Ranged Info")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "config": (
+                "STRING",
+                {"default": DEFAULT_CONFIG, "multiline": True, "dynamicPrompts": False},
+            ),
+            "ranges_key": ("STRING", {"default": "ranges", "multiline": False}),
+            "batch_idx": ("INT", {"default": 0, "min": 0, "step": 1, "max": 999999}),
+            "i_start": ("INT", {"default": 1, "min": 0, "step": 1, "max": 999999}),
+            "i_stop": ("INT", {"default": 100, "min": 0, "step": 1, "max": 999999}),
+            "max_batch_size": (
+                "INT",
+                {"default": 16, "min": 1, "step": 1, "max": 999999},
+            ),
+        }
+    }
+
+    RETURN_NAMES = ("BATCH_I_START", "BATCH_I_STOP")
+    RETURN_TYPES = ("INT", "INT")
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        config: str,
+        ranges_key: str,
+        batch_idx: int,
+        i_start: int,
+        i_stop: int,
+        max_batch_size: int,
+    ):
+        config = yaml.safe_load(config)
+
+        info = RangedConfig(config, range_key=ranges_key)
+
+        range_starts = set(info.get_ranges())
+
+        # get images in selected batch
+        batches = calculate_batches(i_start, i_stop, range_starts, max_batch_size)
+        batch = batches[batch_idx]
+
+        return (batch[0], batch[1])
+
+
 @register_node(
     "JWInfoHashFromRangedInfoAndLoadSubsequences",
     "Info Hash From Ranged Config and Load Batch",
