@@ -160,49 +160,6 @@ class _:
         return (imgs,)
 
 
-@register_node("JWLoadImageSequenceFromString", "Batch Load Image Sequence From String")
-class _:
-    CATEGORY = "jamesWalker55"
-
-    INPUT_TYPES = lambda: {
-        "required": {
-            "paths": (
-                "STRING",
-                {
-                    "default": "./frame000001.png\n./frame000002.png\n./frame000003.png",
-                    "multiline": True,
-                    "dynamicPrompts": False,
-                },
-            ),
-        }
-    }
-
-    RETURN_NAMES = ("IMAGE",)
-    RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
-    FUNCTION = "execute"
-
-    def execute(self, paths: str):
-        paths = [p.strip() for p in paths.splitlines()]
-        paths = [p for p in paths.splitlines() if len(p) != 0]
-
-        for path in paths:
-            if not os.path.exists(path):
-                raise FileNotFoundError(f"Image does not exist: {path}")
-
-        imgs = []
-        for path in paths:
-            img = load_image(path)
-            # img.shape => torch.Size([1, 768, 768, 3])
-            imgs.append(img)
-
-        imgs = torch.cat(imgs, dim=0)
-
-        return (imgs,)
-
-
 def generate_non_conflicting_path(path: Path):
     if not path.exists():
         return path
