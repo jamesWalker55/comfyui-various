@@ -30,7 +30,6 @@ class _:
         }
     }
     RETURN_TYPES = ("INT",)
-    FUNCTION = "execute"
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
@@ -58,7 +57,6 @@ class _:
         }
     }
     RETURN_TYPES = ("FLOAT",)
-    FUNCTION = "execute"
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
@@ -86,7 +84,6 @@ class _:
         }
     }
     RETURN_TYPES = ("STRING",)
-    FUNCTION = "execute"
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
@@ -114,7 +111,6 @@ class _:
         }
     }
     RETURN_TYPES = ("IMAGE",)
-    FUNCTION = "execute"
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
@@ -152,7 +148,6 @@ class _:
         }
     }
     RETURN_TYPES = ("MASK",)
-    FUNCTION = "execute"
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
@@ -226,7 +221,6 @@ class _:
         }
     }
     RETURN_TYPES = ("LATENT",)
-    FUNCTION = "execute"
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
