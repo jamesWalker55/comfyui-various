@@ -223,7 +223,7 @@ class _:
     RETURN_NAMES = ("INFO_HASH", "IMAGE", "BATCH_I_START", "BATCH_I_STOP")
     RETURN_TYPES = ("INFO_HASH", "IMAGE", "INT", "INT")
 
-    OUTPUT_NODE = True
+    OUTPUT_NODE = False
 
     FUNCTION = "execute"
 
