@@ -99,7 +99,7 @@ class _:
         }
     }
     RETURN_TYPES = ("CONDITIONING",)
-    OUTPUT_NODE = True
+    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(
