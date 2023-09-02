@@ -40,7 +40,6 @@ class _:
     """
 
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image_dir": ("STRING", {"default": "./images", "multiline": False}),
@@ -49,12 +48,8 @@ class _:
             "paginate_page": ("INT", {"default": 0, "min": 0}),
         }
     }
-
     RETURN_NAMES = ("IMAGE", "FRAME_COUNT", "FILENAMES")
     RETURN_TYPES = ("IMAGE", "INT", "STRING")
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -103,7 +98,6 @@ class _:
 @register_node("BatchSaveImage", "Batch Save Image")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "images": ("IMAGE",),
@@ -122,12 +116,8 @@ class _:
         },
         "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
     }
-
-    RETURN_NAMES = ()
     RETURN_TYPES = ()
-
     OUTPUT_NODE = True
-
     FUNCTION = "main"
 
     def main(

@@ -110,13 +110,9 @@ def generate_functional_node(
         @register_node(identifier, display_name)
         class _:
             CATEGORY = category
-
             INPUT_TYPES = lambda: {"required": required_inputs}
-
             RETURN_TYPES = tuple(return_types)
-
             OUTPUT_NODE = output_node
-
             FUNCTION = "execute"
 
             def execute(self, *args, **kwargs):

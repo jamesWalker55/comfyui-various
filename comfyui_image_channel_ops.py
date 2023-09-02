@@ -17,19 +17,13 @@ def register_node(identifier: str, display_name: str):
 @register_node("JWImageStackChannels", "Image Stack Channels")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image_a": ("IMAGE",),
             "image_b": ("IMAGE",),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, image_a: torch.Tensor, image_b: torch.Tensor):

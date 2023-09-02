@@ -52,7 +52,6 @@ class _:
     """
 
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "groups_dir": ("STRING", {"default": "./groups", "multiline": False}),
@@ -75,7 +74,6 @@ class _:
             ),
         }
     }
-
     RETURN_NAMES = (
         "POSITIVE_PROMPT",
         "NEGATIVE_PROMPT",
@@ -84,9 +82,6 @@ class _:
         "FILENAMES",
     )
     RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING")
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -435,7 +430,6 @@ class __:
     """
 
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "definition_path": (
@@ -446,7 +440,6 @@ class __:
             "base_path": ("STRING", {"default": ""}),
         }
     }
-
     RETURN_NAMES = (
         "POSITIVE_PROMPT",
         "NEGATIVE_PROMPT",
@@ -456,9 +449,6 @@ class __:
         "GROUP_INFO",
     )
     RETURN_TYPES = ("STRING", "STRING", "IMAGE", "INT", "STRING", "GROUP_INFO")
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, definition_path: str, group_id: int, base_path: str):
@@ -496,7 +486,6 @@ class _:
     """
 
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "definition_path": (
@@ -507,7 +496,6 @@ class _:
             "base_path": ("STRING", {"default": ""}),
         }
     }
-
     RETURN_NAMES = (
         "POSITIVE_PROMPT",
         "NEGATIVE_PROMPT",
@@ -516,9 +504,6 @@ class _:
         "GROUP_INFO",
     )
     RETURN_TYPES = ("STRING", "STRING", "IMAGE", "STRING", "GROUP_INFO")
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, definition_path: str, frame_id: int, base_path: str):
@@ -542,19 +527,13 @@ class _:
 @register_node("GroupInfoExtractInt", "Group Info Extract Integer")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "group_info": ("GROUP_INFO",),
             "key": ("STRING", {"default": ""}),
         }
     }
-
-    RETURN_NAMES = ("INT",)
     RETURN_TYPES = ("INT",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, group_info: dict, key: str):
@@ -569,19 +548,13 @@ class _:
 @register_node("GroupInfoExtractFloat", "Group Info Extract Float")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "group_info": ("GROUP_INFO",),
             "key": ("STRING", {"default": ""}),
         }
     }
-
-    RETURN_NAMES = ("FLOAT",)
     RETURN_TYPES = ("FLOAT",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, group_info: dict, key: str):

@@ -62,18 +62,12 @@ def save_image(img: torch.Tensor, path, prompt=None, extra_pnginfo: dict = None)
 @register_node("JWImageLoadRGB", "Image Load RGB")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "path": ("STRING", {"default": "./image.png"}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, path: str):
@@ -86,18 +80,12 @@ class _:
 @register_node("JWImageLoadRGBA", "Image Load RGBA")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "path": ("STRING", {"default": "./image.png"}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE", "MASK")
     RETURN_TYPES = ("IMAGE", "MASK")
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, path: str):
@@ -114,7 +102,6 @@ class _:
 @register_node("JWLoadImagesFromString", "Load Images From String")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "paths": (
@@ -128,12 +115,7 @@ class _:
             "ignore_missing_images": (("false", "true"), {"default": "false"}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, paths, ignore_missing_images: str):
@@ -171,7 +153,6 @@ class _:
 @register_node("JWImageSaveToPath", "Image Save To Path")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "path": ("STRING", {"default": "./image.png"}),
@@ -179,12 +160,8 @@ class _:
         },
         "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
     }
-
-    RETURN_NAMES = ()
     RETURN_TYPES = ()
-
     OUTPUT_NODE = True
-
     FUNCTION = "execute"
 
     def execute(self, path: str, image: torch.Tensor, prompt=None, extra_pnginfo=None):
@@ -219,19 +196,13 @@ class _:
 @register_node("JWImageExtractFromBatch", "Image Extract From Batch")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "images": ("IMAGE",),
             "index": ("INT", {"default": 0, "min": 0, "step": 1}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, images: torch.Tensor, index: int):
@@ -246,17 +217,12 @@ class _:
 @register_node("JWImageBatchCount", "Get Image Batch Count")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "images": ("IMAGE",),
         }
     }
-
     RETURN_TYPES = ("INT",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, images: torch.Tensor):
@@ -270,7 +236,6 @@ class _:
 @register_node("JWImageResize", "Image Resize")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -281,12 +246,7 @@ class _:
             ),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -319,19 +279,13 @@ class _:
 @register_node("JWImageFlip", "Image Flip")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
             "direction": (("horizontal", "vertical"), {"default": "hotizontal"}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -355,7 +309,6 @@ class _:
 @register_node("JWImageContrast", "Image Contrast")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -365,11 +318,7 @@ class _:
             ),
         }
     }
-
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -390,7 +339,6 @@ class _:
 @register_node("JWImageSaturation", "Image Saturation")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -400,11 +348,7 @@ class _:
             ),
         }
     }
-
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -425,7 +369,6 @@ class _:
 @register_node("JWImageLevels", "Image Levels")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -439,11 +382,7 @@ class _:
             ),
         }
     }
-
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -465,7 +404,6 @@ class _:
 @register_node("JWMaskResize", "Mask Resize")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "mask": ("MASK",),
@@ -476,12 +414,7 @@ class _:
             ),
         }
     }
-
-    RETURN_NAMES = ("MASK",)
     RETURN_TYPES = ("MASK",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -514,19 +447,13 @@ class _:
 @register_node("JWMaskLikeImageSize", "Mask Like Image Size")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
             "value": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
         }
     }
-
-    RETURN_NAMES = ("MASK",)
     RETURN_TYPES = ("MASK",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -549,7 +476,6 @@ class _:
 @register_node("JWImageResizeToSquare", "Image Resize to Square")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -559,12 +485,7 @@ class _:
             ),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -595,7 +516,6 @@ class _:
 @register_node("JWImageResizeByFactor", "Image Resize by Factor")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -605,12 +525,7 @@ class _:
             ),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -644,7 +559,6 @@ class _:
 @register_node("JWImageResizeByShorterSide", "Image Resize by Shorter Side")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -654,12 +568,7 @@ class _:
             ),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -690,7 +599,6 @@ class _:
 @register_node("JWImageResizeByLongerSide", "Image Resize by Longer Side")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -700,12 +608,7 @@ class _:
             ),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(

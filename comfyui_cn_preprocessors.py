@@ -36,7 +36,6 @@ def native_torch_to_comfyui(imgs: torch.Tensor):
 @register_node("JWKorniaCannyEdge", "Kornia Canny Edge")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
@@ -50,12 +49,7 @@ class _:
             ),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, image: torch.Tensor, low_threshold: float, high_threshold: float):

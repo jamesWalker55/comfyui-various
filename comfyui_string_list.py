@@ -24,7 +24,6 @@ class _:
         }
     }
     RETURN_TYPES = ("STRING_LIST",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(self, value: str):
@@ -42,7 +41,6 @@ class _:
         }
     }
     RETURN_TYPES = ("STRING_LIST",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(self, a: str, b: str):
@@ -60,7 +58,6 @@ class _:
         }
     }
     RETURN_TYPES = ("STRING_LIST",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(self, a: list[str], b: list[str]):
@@ -78,7 +75,6 @@ class _:
         }
     }
     RETURN_TYPES = ("STRING_LIST",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(self, string_list: list[str], repeats: int):
@@ -99,7 +95,6 @@ class _:
         }
     }
     RETURN_TYPES = ("STRING",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(self, string_list: list[str], join: str):
@@ -120,7 +115,6 @@ class _:
         }
     }
     RETURN_TYPES = ("STRING",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(self, string_list: list[str], join: str):
@@ -138,7 +132,6 @@ class _:
         }
     }
     RETURN_TYPES = ("CONDITIONING",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(self, string_list: list[str], clip):

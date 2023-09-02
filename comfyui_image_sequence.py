@@ -31,7 +31,6 @@ def load_image(path):
 @register_node("JWLoadImageSequence", "Batch Load Image Sequence")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "path_pattern": (
@@ -43,12 +42,7 @@ class _:
             "ignore_missing_images": (("false", "true"), {"default": "false"}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -97,7 +91,6 @@ class _:
 )
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "path_pattern": (
@@ -110,12 +103,7 @@ class _:
             "ignore_missing_images": (("false", "true"), {"default": "false"}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -195,7 +183,6 @@ def save_image(img: torch.Tensor, path, prompt=None, extra_pnginfo: dict = None)
 @register_node("JWImageSequenceExtractFromBatch", "Extract Image Sequence From Batch")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "images": ("IMAGE",),
@@ -204,12 +191,7 @@ class _:
             "inclusive": (("false", "true"), {"default": "false"}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, images: torch.Tensor, i_start: int, i_stop: int, inclusive: str):
@@ -228,7 +210,6 @@ class _:
 @register_node("JWSaveImageSequence", "Batch Save Image Sequence")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "images": ("IMAGE",),
@@ -241,12 +222,8 @@ class _:
         },
         "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
     }
-
-    RETURN_NAMES = ()
     RETURN_TYPES = ()
-
     OUTPUT_NODE = True
-
     FUNCTION = "execute"
 
     def execute(
@@ -290,17 +267,13 @@ class _:
 @register_node("JWLoopImageSequence", "Loop Image Sequence")
 class LoopImageSequence:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "images": ("IMAGE",),
             "target_frames": ("INT", {"default": 16, "step": 1}),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
     FUNCTION = "execute"
 
     def execute(self, images: torch.Tensor, target_frames: int):

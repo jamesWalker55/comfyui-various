@@ -19,7 +19,6 @@ def register_node(identifier: str, display_name: str):
 @register_node("JWReferenceOnly", "James: Reference Only")
 class ReferenceOnlySimple:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "model": ("MODEL",),
@@ -28,9 +27,7 @@ class ReferenceOnlySimple:
             "batch_size": ("INT", {"default": 1, "min": 1, "max": 64}),
         }
     }
-
     RETURN_TYPES = ("MODEL", "LATENT")
-
     FUNCTION = "execute"
 
     def execute(self, model, reference, initial_latent, batch_size):
@@ -99,7 +96,6 @@ class _:
         }
     }
     RETURN_TYPES = ("CONDITIONING",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(
@@ -128,18 +124,6 @@ class _:
 
 @register_node("JWSetModelBetaSchedule", "Set Model Beta Schedule")
 class _:
-    @classmethod
-    def INPUT_TYPES(s):
-        return {
-            "required": {
-                "model": ("MODEL",),
-            }
-        }
-
-    RETURN_TYPES = ("LATENT",)
-    FUNCTION = "sample"
-    CATEGORY = "sampling"
-
     CATEGORY = "jamesWalker55"
     INPUT_TYPES = lambda: {
         "required": {
@@ -155,7 +139,6 @@ class _:
         }
     }
     RETURN_TYPES = ("MODEL",)
-    OUTPUT_NODE = False
     FUNCTION = "execute"
 
     def execute(

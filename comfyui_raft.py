@@ -81,19 +81,13 @@ class _:
     """
 
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "image_a": ("IMAGE",),
             "image_b": ("IMAGE",),
         }
     }
-
-    RETURN_NAMES = ("RAFT_FLOW",)
     RETURN_TYPES = ("RAFT_FLOW",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, image_a: torch.Tensor, image_b: torch.Tensor):
@@ -134,18 +128,12 @@ class _:
     """
 
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "raft_flow": ("RAFT_FLOW",),
         }
     }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, raft_flow: torch.Tensor):
@@ -203,7 +191,6 @@ class _:
     """
 
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "path": ("STRING", {"default": ""}),
@@ -213,12 +200,7 @@ class _:
             "invert_y": (("false", "true"), {"default": "false"}),
         }
     }
-
-    RETURN_NAMES = ("RAFT_FLOW",)
     RETURN_TYPES = ("RAFT_FLOW",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(

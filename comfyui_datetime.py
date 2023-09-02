@@ -17,18 +17,12 @@ def register_node(identifier: str, display_name: str):
 @register_node("JWDatetimeString", "Datetime String")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "format": ("STRING", {"default": "%Y-%m-%dT%H:%M:%SZ"}),
         }
     }
-
-    RETURN_NAMES = ("STRING",)
     RETURN_TYPES = ("STRING",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, format: str):

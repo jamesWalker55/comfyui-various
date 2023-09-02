@@ -127,7 +127,6 @@ ranges:
 @register_node("JWInfoHashFromRangedInfo", "Info Hash From Ranged Config")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "config": (
@@ -138,11 +137,7 @@ class _:
             "ranges_key": ("STRING", {"default": "ranges", "multiline": False}),
         }
     }
-
     RETURN_TYPES = ("INFO_HASH",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, config: str, i: int, ranges_key: str):
@@ -156,7 +151,6 @@ class _:
 @register_node("JWInfoHashListFromRangedInfo", "Info Hash List From Ranged Config")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "config": (
@@ -169,11 +163,7 @@ class _:
             "inclusive": (("false", "true"), {"default": "false"}),
         }
     }
-
     RETURN_TYPES = ("INFO_HASH_LIST",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -237,7 +227,6 @@ def calculate_batches(
 @register_node("JWRangedInfoCalculateSubBatch", "Calculate Sub Batch for Ranged Info")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "config": (
@@ -255,12 +244,8 @@ class _:
             "inclusive": (("false", "true"), {"default": "false"}),
         }
     }
-
     RETURN_NAMES = ("BATCH_I_START", "BATCH_I_STOP")
     RETURN_TYPES = ("INT", "INT")
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -296,7 +281,6 @@ class _:
 )
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "config": (
@@ -315,12 +299,8 @@ class _:
             "inclusive": (("false", "true"), {"default": "false"}),
         }
     }
-
     RETURN_NAMES = ("INFO_HASH", "IMAGE", "BATCH_I_START", "BATCH_I_STOP")
     RETURN_TYPES = ("INFO_HASH", "IMAGE", "INT", "INT")
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -365,18 +345,13 @@ class _:
 @register_node("JWInfoHashExtractInteger", "Info Hash Extract Integer")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "info_hash": ("INFO_HASH",),
             "key": ("STRING", {"default": "i", "multiline": False}),
         }
     }
-
     RETURN_TYPES = ("INT",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, info_hash: dict, key: str):
@@ -387,18 +362,13 @@ class _:
 @register_node("JWInfoHashExtractFloat", "Info Hash Extract Float")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "info_hash": ("INFO_HASH",),
             "key": ("STRING", {"default": "key", "multiline": False}),
         }
     }
-
     RETURN_TYPES = ("FLOAT",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, info_hash: dict, key: str):
@@ -409,18 +379,13 @@ class _:
 @register_node("JWInfoHashExtractString", "Info Hash Extract String")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "info_hash": ("INFO_HASH",),
             "key": ("STRING", {"default": "p", "multiline": False}),
         }
     }
-
     RETURN_TYPES = ("STRING",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, info_hash: dict, key: str):
@@ -431,18 +396,13 @@ class _:
 @register_node("JWInfoHashListExtractStringList", "Info Hash List Extract String List")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "info_hash_list": ("INFO_HASH_LIST",),
             "key": ("STRING", {"default": "p", "multiline": False}),
         }
     }
-
     RETURN_TYPES = ("STRING_LIST",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, info_hash_list: list[dict], key: str):
@@ -453,18 +413,13 @@ class _:
 @register_node("JWInfoHashFromInfoHashList", "Extract Info Hash From Info Hash List")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "info_hash_list": ("INFO_HASH_LIST",),
             "i": ("INT", {"default": 0, "step": 1, "min": -99999999, "max": 99999999}),
         }
     }
-
     RETURN_TYPES = ("INFO_HASH",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(self, info_hash_list: list[dict], i: int):
@@ -474,17 +429,13 @@ class _:
 @register_node("JWInfoHashPrint", "Print Info Hash (Debug)")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "info_hash": ("INFO_HASH",),
         }
     }
-
     RETURN_TYPES = ()
-
     OUTPUT_NODE = True
-
     FUNCTION = "execute"
 
     def execute(self, info_hash: dict):

@@ -17,9 +17,7 @@ def register_node(identifier: str, display_name: str):
 @register_node("JWImageMix", "Image Mix")
 class _:
     CATEGORY = "jamesWalker55"
-
     BLEND_TYPES = ("mix", "multiply")
-
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -30,12 +28,7 @@ class _:
                 "image_b": ("IMAGE",),
             }
         }
-
-    RETURN_NAMES = ("IMAGE",)
     RETURN_TYPES = ("IMAGE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(

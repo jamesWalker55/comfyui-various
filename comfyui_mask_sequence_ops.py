@@ -17,19 +17,13 @@ def register_node(identifier: str, display_name: str):
 @register_node("JWMaskSequenceFromMask", "Mask Sequence From Mask")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "mask": ("MASK",),
             "batch_size": ("INT", {"default": 1, "min": 1, "step": 1}),
         }
     }
-
-    RETURN_NAMES = ("MASK_SEQUENCE",)
     RETURN_TYPES = ("MASK_SEQUENCE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -50,19 +44,13 @@ class _:
 @register_node("JWMaskSequenceJoin", "Join Mask Sequence")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "mask_sequence_1": ("MASK_SEQUENCE",),
             "mask_sequence_2": ("MASK_SEQUENCE",),
         }
     }
-
-    RETURN_NAMES = ("MASK_SEQUENCE",)
     RETURN_TYPES = ("MASK_SEQUENCE",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
@@ -81,18 +69,13 @@ class _:
 @register_node("JWMaskSequenceApplyToLatent", "Apply Mask Sequence to Latent")
 class _:
     CATEGORY = "jamesWalker55"
-
     INPUT_TYPES = lambda: {
         "required": {
             "samples": ("LATENT",),
             "mask_sequence": ("MASK_SEQUENCE",),
         }
     }
-
     RETURN_TYPES = ("LATENT",)
-
-    OUTPUT_NODE = False
-
     FUNCTION = "execute"
 
     def execute(
