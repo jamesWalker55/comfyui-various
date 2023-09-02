@@ -316,6 +316,152 @@ class _:
         return (image,)
 
 
+@register_node("JWImageFlip", "Image Flip")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "direction": (("horizontal", "vertical"), {"default": "hotizontal"}),
+        }
+    }
+
+    RETURN_NAMES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        direction: str,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert direction in ("horizontal", "vertical")
+
+        image = image.permute(0, 3, 1, 2)
+        if direction == "horizontal":
+            image = F.hflip(image)
+        else:
+            image = F.vflip(image)
+        image = image.permute(0, 2, 3, 1)
+
+        return (image,)
+
+
+@register_node("JWImageContrast", "Image Contrast")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "factor": (
+                "FLOAT",
+                {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.01},
+            ),
+        }
+    }
+
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        factor: float,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(factor, float)
+
+        image = image.permute(0, 3, 1, 2)
+        image = F.adjust_contrast(image, factor)
+        image = image.permute(0, 2, 3, 1)
+
+        return (image,)
+
+
+@register_node("JWImageSaturation", "Image Saturation")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "factor": (
+                "FLOAT",
+                {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.01},
+            ),
+        }
+    }
+
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        factor: float,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(factor, float)
+
+        image = image.permute(0, 3, 1, 2)
+        image = F.adjust_saturation(image, factor)
+        image = image.permute(0, 2, 3, 1)
+
+        return (image,)
+
+
+@register_node("JWImageLevels", "Image Levels")
+class _:
+    CATEGORY = "jamesWalker55"
+
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "min": (
+                "FLOAT",
+                {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.01},
+            ),
+            "max": (
+                "FLOAT",
+                {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01},
+            ),
+        }
+    }
+
+    RETURN_TYPES = ("IMAGE",)
+
+    OUTPUT_NODE = False
+
+    FUNCTION = "execute"
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        min: float,
+        max: float,
+    ):
+        assert isinstance(image, torch.Tensor)
+        assert isinstance(min, float)
+        assert isinstance(max, float)
+
+        image = (image - min) / (max - min)
+        image = torch.clamp(image, 0.0, 1.0)
+
+        return (image,)
+
+
 @register_node("JWMaskResize", "Mask Resize")
 class _:
     CATEGORY = "jamesWalker55"
