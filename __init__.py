@@ -48,17 +48,29 @@ def load_nodes(module_name: str):
     }
 
 
-def print_nodes(module_name: str):
-    module = importlib.import_module(module_name, package=__name__)
+def write_nodes_list(module_names: list[str]):
+    this_dir = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(this_dir, "nodes.log")
 
-    print(module_name.strip("."))
+    lines = []
 
-    for identifier, display_name in module.NODE_DISPLAY_NAME_MAPPINGS.items():
-        print(f"  {identifier}: {display_name}")
+    for module_name in module_names:
+        module = importlib.import_module(module_name, package=__name__)
 
-    print()
+        lines.append(module_name.strip("."))
+
+        for identifier, display_name in module.NODE_DISPLAY_NAME_MAPPINGS.items():
+            lines.append(f"  {identifier}: {display_name}")
+
+        lines.append("")
+
+    lines = "\n".join(lines)
+
+    with open(path, "w", encoding="utf8") as f:
+        f.write(lines)
 
 
 for module_name in NODE_MODULES:
     load_nodes(module_name)
-    # print_nodes(module_name)
+
+# write_nodes_list(NODE_MODULES)
