@@ -25,7 +25,6 @@ if (
         [
             ".comfyui_batch_io",
             ".comfyui_group_io",
-            ".comfyui_cn_preprocessors",
             ".comfyui_jw",
             ".comfyui_info_hash",
             ".comfyui_debug",

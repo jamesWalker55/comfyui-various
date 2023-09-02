@@ -29,7 +29,7 @@ def load_image(path):
     return img
 
 
-@register_node("JamesLoadImageGroup", "James: Load Image Group")
+@register_node("JamesLoadImageGroup", "[DEPRECATED] James: Load Image Group")
 class _:
     """
     An opinionated batch image loader. This is used for loading groups for batch processing.
@@ -420,7 +420,7 @@ class GroupedWorkspace:
         return images, filenames
 
 
-@register_node("GroupLoadBatchImages", "Group Load Batch Images")
+@register_node("GroupLoadBatchImages", "[DEPRECATED] Group Load Batch Images")
 class __:
     """
     An opinionated batch image loader. This is used for loading groups for batch processing.
@@ -476,7 +476,7 @@ class __:
         )
 
 
-@register_node("GroupLoadImage", "Group Load Image")
+@register_node("GroupLoadImage", "[DEPRECATED] Group Load Image")
 class _:
     """
     An opinionated image loader. This is used for loading groups for batch processing.
@@ -524,7 +524,7 @@ class _:
         return (pos_prompt, neg_prompt, image, filename, group_info)
 
 
-@register_node("GroupInfoExtractInt", "Group Info Extract Integer")
+@register_node("GroupInfoExtractInt", "[DEPRECATED] Group Info Extract Integer")
 class _:
     CATEGORY = "jamesWalker55"
     INPUT_TYPES = lambda: {
@@ -545,7 +545,7 @@ class _:
         return (val,)
 
 
-@register_node("GroupInfoExtractFloat", "Group Info Extract Float")
+@register_node("GroupInfoExtractFloat", "[DEPRECATED] Group Info Extract Float")
 class _:
     CATEGORY = "jamesWalker55"
     INPUT_TYPES = lambda: {

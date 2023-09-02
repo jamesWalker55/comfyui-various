@@ -30,7 +30,7 @@ def load_image(path):
     return img
 
 
-@register_node("BatchLoadImage", "Batch Load Image")
+@register_node("BatchLoadImage", "[DEPRECATED] Batch Load Image")
 class _:
     """
     Batch-load images in a given folder. To avoid loading too many images at once,
@@ -95,7 +95,7 @@ class _:
         return (imgs, len(imgs), "\n".join(filenames))
 
 
-@register_node("BatchSaveImage", "Batch Save Image")
+@register_node("BatchSaveImage", "[DEPRECATED] Batch Save Image")
 class _:
     CATEGORY = "jamesWalker55"
     INPUT_TYPES = lambda: {
