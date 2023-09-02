@@ -40,8 +40,12 @@ Each `comfyui_*.py` file contains a group of nodes of similar purpose. This repo
 comfyui_image_ops
   JWImageLoadRGB: Image Load RGB
   JWImageLoadRGBA: Image Load RGBA
+  JWLoadImagesFromString: Load Images From String
   JWImageSaveToPath: Image Save To Path
+  JWImageExtractFromBatch: Image Extract From Batch
+  JWImageBatchCount: Get Image Batch Count
   JWImageResize: Image Resize
+  JWImageFlip: Image Flip
   JWMaskResize: Mask Resize
   JWMaskLikeImageSize: Mask Like Image Size
   JWImageResizeToSquare: Image Resize to Square
@@ -58,6 +62,8 @@ comfyui_primitive_ops
   JWIntegerMul: Integer Multiply
   JWIntegerDiv: Integer Divide
   JWIntegerAbsolute: Integer Absolute Value
+  JWIntegerMin: Integer Minimum
+  JWIntegerMax: Integer Maximum
   JWFloat: Float
   JWFloatToInteger: Float to Integer
   JWFloatToString: Float to String
@@ -66,6 +72,8 @@ comfyui_primitive_ops
   JWFloatMul: Float Multiply
   JWFloatDiv: Float Divide
   JWFloatAbsolute: Float Absolute Value
+  JWFloatMin: Float Minimum
+  JWFloatMax: Float Maximum
   JWString: String
   JWStringToInteger: String to Integer
   JWStringToFloat: String to Float
@@ -74,6 +82,7 @@ comfyui_primitive_ops
   JWStringReplace: String Replace
   JWStringSplit: String Split
   JWStringGetLine: String Get Line
+  JWStringUnescape: String Unescape
 
 comfyui_raft
   RAFTEstimate: RAFT Estimate
@@ -82,21 +91,25 @@ comfyui_raft
 
 comfyui_image_channel_ops
   JWImageStackChannels: Image Stack Channels
-  JWImageExtractFromBatch: Image Extract From Batch
 
 comfyui_color_ops
   JWImageMix: Image Mix
+  JWImageContrast: Image Contrast
+  JWImageSaturation: Image Saturation
+  JWImageLevels: Image Levels
 
 comfyui_datetime
   JWDatetimeString: Datetime String
 
 comfyui_image_sequence
   JWLoadImageSequence: Batch Load Image Sequence
+  JWLoadImageSequenceWithStopIndex: Batch Load Image Sequence With Stop Index
+  JWImageSequenceExtractFromBatch: Extract Image Sequence From Batch
   JWSaveImageSequence: Batch Save Image Sequence
   JWLoopImageSequence: Loop Image Sequence
 
 comfyui_mask_sequence_ops
-  JWMaskSequenceFromMask: Mask Sequence From Sequence
+  JWMaskSequenceFromMask: Mask Sequence From Mask
   JWMaskSequenceJoin: Join Mask Sequence
   JWMaskSequenceApplyToLatent: Apply Mask Sequence to Latent
 ```
