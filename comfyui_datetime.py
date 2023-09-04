@@ -19,7 +19,7 @@ class _:
     CATEGORY = "jamesWalker55"
     INPUT_TYPES = lambda: {
         "required": {
-            "format": ("STRING", {"default": "%Y-%m-%dT%H:%M:%SZ"}),
+            "format": ("STRING", {"default": "%Y-%m-%dT%H:%M:%S"}),
         }
     }
     RETURN_TYPES = ("STRING",)
