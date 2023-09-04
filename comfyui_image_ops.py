@@ -157,6 +157,7 @@ class _:
         "required": {
             "path": ("STRING", {"default": "./image.png"}),
             "image": ("IMAGE",),
+            "overwrite": (("false", "true"), {"default": "true"}),
         },
         "hidden": {"prompt": "PROMPT", "extra_pnginfo": "EXTRA_PNGINFO"},
     }
@@ -164,11 +165,24 @@ class _:
     OUTPUT_NODE = True
     FUNCTION = "execute"
 
-    def execute(self, path: str, image: torch.Tensor, prompt=None, extra_pnginfo=None):
+    def execute(
+        self,
+        path: str,
+        image: torch.Tensor,
+        overwrite: str,
+        prompt=None,
+        extra_pnginfo=None,
+    ):
         assert isinstance(path, str)
         assert isinstance(image, torch.Tensor)
+        assert isinstance(overwrite, str)
+
+        overwrite: bool = overwrite == "true"
 
         path: Path = Path(path)
+        if not overwrite and path.exists():
+            return ()
+
         path.parent.mkdir(exist_ok=True)
 
         if image.shape[0] == 1:
