@@ -14,6 +14,7 @@ NODE_MODULES = [
     ".comfyui_datetime",
     ".comfyui_image_sequence",
     ".comfyui_mask_sequence_ops",
+    ".comfyui_default",
 ]
 
 # Extra nodes for my own use
