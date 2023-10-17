@@ -81,6 +81,44 @@ class _:
         return (val,)
 
 
+@register_node("RCReceiveInt", "Remote Call: Receive Integer")
+class _:
+    CATEGORY = "jamesWalker55/rc"
+    INPUT_TYPES = lambda: {
+        "required": {
+            "key": (
+                "STRING",
+                {"default": "input_integer", "multiline": False},
+            ),
+            "value": ("INT", {"default": 0, "min": -99999999999, "max": 99999999999}),
+        }
+    }
+    RETURN_TYPES = ("INT",)
+    FUNCTION = "execute"
+
+    def execute(self, key: str, value):
+        return (value,)
+
+
+@register_node("RCReceiveFloat", "Remote Call: Receive Float")
+class _:
+    CATEGORY = "jamesWalker55/rc"
+    INPUT_TYPES = lambda: {
+        "required": {
+            "key": (
+                "STRING",
+                {"default": "input_float", "multiline": False},
+            ),
+            "value": ("FLOAT", {"default": 0, "min": -99999999999, "max": 99999999999}),
+        }
+    }
+    RETURN_TYPES = ("FLOAT",)
+    FUNCTION = "execute"
+
+    def execute(self, key: str, value):
+        return (value,)
+
+
 @register_node("RCSendLatent", "Remote Call: Send Latent")
 class _:
     CATEGORY = "jamesWalker55/rc"
