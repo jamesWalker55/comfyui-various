@@ -1,4 +1,5 @@
 import base64
+import json
 import lzma
 from io import BytesIO
 
@@ -116,6 +117,52 @@ class _:
     FUNCTION = "execute"
 
     def execute(self, key: str, value):
+        return (value,)
+
+
+@register_node("RCReceiveIntList", "Remote Call: Receive Integer List")
+class _:
+    CATEGORY = "jamesWalker55/rc"
+    INPUT_TYPES = lambda: {
+        "required": {
+            "key": (
+                "STRING",
+                {"default": "input_integer_list", "multiline": False},
+            ),
+            "value": (
+                "STRING",
+                {"default": "[1, 2, 3]", "multiline": False},
+            ),
+        }
+    }
+    RETURN_TYPES = ("INT_LIST",)
+    FUNCTION = "execute"
+
+    def execute(self, key: str, value):
+        value = json.loads(value)
+        return (value,)
+
+
+@register_node("RCReceiveFloatList", "Remote Call: Receive Float List")
+class _:
+    CATEGORY = "jamesWalker55/rc"
+    INPUT_TYPES = lambda: {
+        "required": {
+            "key": (
+                "STRING",
+                {"default": "input_float_list", "multiline": False},
+            ),
+            "value": (
+                "STRING",
+                {"default": "[1.0, 2.0, 3.0]", "multiline": False},
+            ),
+        }
+    }
+    RETURN_TYPES = ("FLOAT_LIST",)
+    FUNCTION = "execute"
+
+    def execute(self, key: str, value):
+        value = json.loads(value)
         return (value,)
 
 
