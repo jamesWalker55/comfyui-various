@@ -150,7 +150,7 @@ class _:
         linear_end: float,
         cosine_s: float,
     ):
-        model.model.register_schedule(
+        model.model.model_sampling._register_schedule(
             given_betas=None,
             beta_schedule=beta_schedule,
             timesteps=timesteps,
