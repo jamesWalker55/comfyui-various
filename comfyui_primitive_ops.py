@@ -172,7 +172,7 @@ def _(a: int = 0, b: int = 0) -> tuple[int]:
 
 @generate_functional_node("jamesWalker55", "JWIntegerMax", "Integer Maximum")
 def _(a: int = 0, b: int = 0) -> tuple[int]:
-    return (min(a, b),)
+    return (max(a, b),)
 
 
 @generate_functional_node("jamesWalker55", "JWFloat", "Float")
@@ -231,7 +231,7 @@ def _(a: float = 0, b: float = 0) -> tuple[float]:
 
 @generate_functional_node("jamesWalker55", "JWFloatMax", "Float Maximum")
 def _(a: float = 0, b: float = 0) -> tuple[float]:
-    return (min(a, b),)
+    return (max(a, b),)
 
 
 @generate_functional_node("jamesWalker55", "JWString", "String")
