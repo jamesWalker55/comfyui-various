@@ -555,7 +555,7 @@ class _:
         image = image.permute(0, 3, 1, 2)
         image = F.resize(
             image,
-            (new_w, new_h),
+            (new_h, new_w),
             interpolation=interpolation_mode,
             antialias=True,
         )
