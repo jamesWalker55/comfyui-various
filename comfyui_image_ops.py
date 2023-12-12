@@ -352,8 +352,8 @@ class _:
         interpolation_mode = getattr(InterpolationMode, interpolation_mode)
 
         mask = mask.unsqueeze(0)
-        image = F.resize(
-            image,
+        mask = F.resize(
+            mask,
             (height, width),
             interpolation=interpolation_mode,
             antialias=True,
