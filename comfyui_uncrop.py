@@ -98,7 +98,7 @@ class _:
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
-            "resize_length": ("INT", {"default": 512, "min": 0, "step": 1}),
+            "resize_length": ("INT", {"default": 512, "min": 8, "step": 8}),
             "crop_rect": ("CROP_RECT",),
         }
     }
@@ -118,8 +118,8 @@ class _:
 
         shortest_side = min(width, height)
         scale_ratio = resize_length / shortest_side
-        new_width = round(width * scale_ratio)
-        new_height = round(height * scale_ratio)
+        new_width = round(round(width * scale_ratio / 8) * 8)
+        new_height = round(round(height * scale_ratio / 8) * 8)
 
         image = resize_image(image, new_width, new_height)
 
@@ -166,10 +166,13 @@ class _:
         to_x = x + width
         to_y = y + height
 
+        # https://easings.net/#easeOutQuint
+        weighted_mask = 1 - (1 - cropped_mask) ** 5
+
         # blend original image with cropped image using mask
-        cropped_image = original_image[:, y:to_y, x:to_x, :] * cropped_mask.view(
-            1, *cropped_mask.shape, 1
-        ) + cropped_image * (1 - cropped_mask.view(1, *cropped_mask.shape, 1))
+        cropped_image = original_image[:, y:to_y, x:to_x, :] * (
+            1 - weighted_mask.view(1, *weighted_mask.shape, 1)
+        ) + cropped_image * weighted_mask.view(1, *weighted_mask.shape, 1)
 
         # paste cropped image into original image
         original_image = original_image.clone()
