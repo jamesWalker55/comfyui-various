@@ -31,6 +31,7 @@ if (
             ".comfyui_debug",
             ".comfyui_string_list",
             ".comfyui_uncrop",
+            ".comfyui_rc",
         ]
     )
 
