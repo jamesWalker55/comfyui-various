@@ -30,6 +30,7 @@ if (
             ".comfyui_info_hash",
             ".comfyui_debug",
             ".comfyui_string_list",
+            ".comfyui_uncrop",
         ]
     )
 
