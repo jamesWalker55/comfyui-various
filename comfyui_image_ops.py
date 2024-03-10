@@ -37,8 +37,10 @@ def save_image(img: torch.Tensor, path, prompt=None, extra_pnginfo: dict = None)
         raise ValueError(f"can't take image batch as input, got {img.shape[0]} images")
 
     img = img.permute(2, 0, 1)
-    if img.shape[0] != 3:
-        raise ValueError(f"image must have 3 channels, but got {img.shape[0]} channels")
+    if img.shape[0] not in (3, 4):
+        raise ValueError(
+            f"image must have 3 or 4 channels, but got {img.shape[0]} channels"
+        )
 
     img = img.clamp(0, 1)
     img = F.to_pil_image(img)
