@@ -52,6 +52,9 @@ comfyui_image_ops
   JWImageResizeByFactor: Image Resize by Factor
   JWImageResizeByShorterSide: Image Resize by Shorter Side
   JWImageResizeByLongerSide: Image Resize by Longer Side
+  JWImageResizeToClosestSDXLResolution: Image Resize to Closest SDXL Resolution
+  JWImageLoadRGBFromClipboard: Image Load RGB From Clipboard
+  JWImageLoadRGBA From Clipboard: Image Load RGBA From Clipboard
 
 comfyui_primitive_ops
   JWInteger: Integer
