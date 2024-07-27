@@ -1,11 +1,13 @@
 import json
+import math
 import os
 from pathlib import Path
+from typing import Union
 
 import numpy as np
 import torch
 import torchvision.transforms.functional as F
-from PIL import Image
+from PIL import Image, ImageGrab
 from PIL.PngImagePlugin import PngInfo
 from torchvision.transforms import InterpolationMode
 
@@ -564,3 +566,127 @@ class _:
         image = image.permute(0, 2, 3, 1)
 
         return (image,)
+
+
+@register_node(
+    "JWImageResizeToClosestSDXLResolution", "Image Resize to Closest SDXL Resolution"
+)
+class _:
+    CATEGORY = "jamesWalker55"
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "interpolation_mode": (
+                ["bicubic", "bilinear", "nearest", "nearest exact"],
+            ),
+        }
+    }
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "execute"
+
+    # tuples of (height x width)
+    SDXL_RESOLUTIONS = (
+        (1024, 1024),
+        (1152, 896),
+        (896, 1152),
+        (1216, 832),
+        (832, 1216),
+        (1344, 768),
+        (768, 1344),
+        (1536, 640),
+        (640, 1536),
+    )
+
+    @staticmethod
+    def compare_fn(img_w: int, img_h: int, resolution: tuple[int, int]):
+        img_deg = math.atan(img_h / img_w)
+        xl_deg = math.atan(resolution[0] / resolution[1])
+        return abs(img_deg - xl_deg)
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        interpolation_mode: str,
+    ):
+        interpolation_mode = interpolation_mode.upper().replace(" ", "_")
+        interpolation_mode = getattr(InterpolationMode, interpolation_mode)
+
+        _, h, w, _ = image.shape
+
+        closest_resolution = min(
+            self.SDXL_RESOLUTIONS, key=lambda res: self.compare_fn(w, h, res)
+        )
+
+        image = image.permute(0, 3, 1, 2)
+        image = F.resize(
+            image,
+            closest_resolution,  # type: ignore
+            interpolation=interpolation_mode,  # type: ignore
+            antialias=True,
+        )
+        image = image.permute(0, 2, 3, 1)
+
+        return (image,)
+
+
+def get_image_from_clipboard(rgba=False) -> torch.Tensor | None:
+    rv = ImageGrab.grabclipboard()
+    if rv is None:
+        return None
+
+    if isinstance(rv, list):
+        if len(rv) == 0:
+            return None
+
+        img = Image.open(rv[1]).convert("RGBA" if rgba else "RGB")
+    else:
+        # rv is some kind of image
+        img = rv.convert("RGBA" if rgba else "RGB")
+
+    img = np.array(img).astype(np.float32) / 255.0
+    img = torch.from_numpy(img).unsqueeze(0)
+
+    return img
+
+
+@register_node("JWImageLoadRGBFromClipboard", "Image Load RGB From Clipboard")
+class _:
+    CATEGORY = "jamesWalker55"
+    INPUT_TYPES = lambda: {"required": {}}
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "execute"
+
+    def execute(self):
+        img = get_image_from_clipboard(rgba=False)
+        if img is None:
+            raise ValueError(f"failed to get image from clipboard")
+        return (img,)
+
+    def IS_CHANGED(self, *args):
+        # This value will be compared with previous 'IS_CHANGED' outputs
+        # If inequal, then this node will be considered as modified
+        return get_image_from_clipboard(rgba=False)
+
+
+@register_node("JWImageLoadRGBA From Clipboard", "Image Load RGBA From Clipboard")
+class _:
+    CATEGORY = "jamesWalker55"
+    INPUT_TYPES = lambda: {"required": {}}
+    RETURN_TYPES = ("IMAGE", "MASK")
+    FUNCTION = "execute"
+
+    def execute(self):
+        img = get_image_from_clipboard(rgba=True)
+        if img is None:
+            raise ValueError(f"failed to get image from clipboard")
+
+        color = img[:, :, :, 0:3]
+        mask = img[0, :, :, 3]
+        mask = 1 - mask  # invert mask
+
+        return (color, mask)
+
+    def IS_CHANGED(self, *args):
+        # This value will be compared with previous 'IS_CHANGED' outputs
+        # If inequal, then this node will be considered as modified
+        return get_image_from_clipboard(rgba=True)
