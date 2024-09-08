@@ -300,7 +300,7 @@ class _:
     INPUT_TYPES = lambda: {
         "required": {
             "image": ("IMAGE",),
-            "direction": (("horizontal", "vertical"), {"default": "hotizontal"}),
+            "direction": (("horizontal", "vertical"), {"default": "horizontal"}),
         }
     }
     RETURN_TYPES = ("IMAGE",)
