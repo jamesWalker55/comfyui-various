@@ -729,7 +729,7 @@ def get_image_from_clipboard(rgba=False) -> torch.Tensor | None:
         if len(rv) == 0:
             return None
 
-        img = Image.open(rv[1]).convert("RGBA" if rgba else "RGB")
+        img = Image.open(rv[0]).convert("RGBA" if rgba else "RGB")
     else:
         # rv is some kind of image
         img = rv.convert("RGBA" if rgba else "RGB")
