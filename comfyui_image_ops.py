@@ -581,7 +581,8 @@ class _:
             ),
         }
     }
-    RETURN_TYPES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE", "INT", "INT")
+    RETURN_NAMES = ("IMAGE", "WIDTH", "HEIGHT")
     FUNCTION = "execute"
 
     # tuples of (height x width)
@@ -626,7 +627,97 @@ class _:
         )
         image = image.permute(0, 2, 3, 1)
 
-        return (image,)
+        return (image, closest_resolution[1], closest_resolution[0])
+
+
+@register_node(
+    "JWImageCropToClosestSDXLResolution", "Image Crop to Closest SDXL Resolution"
+)
+class _:
+    CATEGORY = "jamesWalker55"
+    INPUT_TYPES = lambda: {
+        "required": {
+            "image": ("IMAGE",),
+            "interpolation_mode": (
+                ["bicubic", "bilinear", "nearest", "nearest exact"],
+            ),
+        }
+    }
+    RETURN_TYPES = ("IMAGE", "INT", "INT")
+    RETURN_NAMES = ("IMAGE", "WIDTH", "HEIGHT")
+    FUNCTION = "execute"
+
+    # tuples of (height x width)
+    SDXL_RESOLUTIONS = (
+        (1024, 1024),
+        (1152, 896),
+        (896, 1152),
+        (1216, 832),
+        (832, 1216),
+        (1344, 768),
+        (768, 1344),
+        (1536, 640),
+        (640, 1536),
+    )
+
+    @staticmethod
+    def angle(w: int, h: int):
+        return math.atan(h / w)
+
+    @staticmethod
+    def compare_fn(img_w: int, img_h: int, resolution: tuple[int, int]):
+        img_deg = math.atan(img_h / img_w)
+        xl_deg = math.atan(resolution[0] / resolution[1])
+        return abs(img_deg - xl_deg)
+
+    def execute(
+        self,
+        image: torch.Tensor,
+        interpolation_mode: str,
+    ):
+        interpolation_mode = interpolation_mode.upper().replace(" ", "_")
+        interpolation_mode = getattr(InterpolationMode, interpolation_mode)
+
+        _, h, w, _ = image.shape
+
+        closest_resolution = min(
+            self.SDXL_RESOLUTIONS, key=lambda res: self.compare_fn(w, h, res)
+        )
+
+        img_deg = self.angle(w, h)
+        target_deg = self.angle(closest_resolution[1], closest_resolution[0])
+
+        if img_deg > target_deg:
+            # image is taller and narrower than target
+            w_scaled = closest_resolution[1]
+            h_scaled = max(round(closest_resolution[1] / w * h), 0)
+        else:
+            # image is wider and shorter than target
+            h_scaled = closest_resolution[0]
+            w_scaled = max(round(closest_resolution[0] / h * w), 0)
+
+        scaled_deg = self.angle(w_scaled, h_scaled)
+        print(f"{[h, w] = }")
+        print(f"{closest_resolution = }")
+        print(f"{[h_scaled, w_scaled] = }")
+        print(f"{img_deg = }")
+        print(f"{target_deg = }")
+        print(f"{scaled_deg = }")
+
+        image = image.permute(0, 3, 1, 2)
+        image = F.resize(
+            image,
+            [h_scaled, w_scaled],
+            interpolation=interpolation_mode,  # type: ignore
+            antialias=True,
+        )
+        image = F.center_crop(
+            image,
+            closest_resolution,  # type: ignore
+        )
+        image = image.permute(0, 2, 3, 1)
+
+        return (image, closest_resolution[1], closest_resolution[0])
 
 
 def get_image_from_clipboard(rgba=False) -> torch.Tensor | None:
