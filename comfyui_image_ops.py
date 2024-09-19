@@ -2,7 +2,7 @@ import json
 import math
 import os
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 import numpy as np
 import torch
@@ -720,7 +720,7 @@ class _:
         return (image, closest_resolution[1], closest_resolution[0])
 
 
-def get_image_from_clipboard(rgba=False) -> torch.Tensor | None:
+def get_image_from_clipboard(rgba=False) -> Optional[torch.Tensor]:
     rv = ImageGrab.grabclipboard()
     if rv is None:
         return None
