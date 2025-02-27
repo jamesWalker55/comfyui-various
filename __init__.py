@@ -15,6 +15,7 @@ NODE_MODULES = [
     ".comfyui_image_sequence",
     ".comfyui_mask_sequence_ops",
     ".comfyui_default",
+    ".comfyui_sound",
 ]
 
 # Extra nodes for my own use
