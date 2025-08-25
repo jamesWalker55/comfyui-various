@@ -1,3 +1,4 @@
+#channels managment improvements to avoid errors mixing audios.
 import json
 import math
 import os
