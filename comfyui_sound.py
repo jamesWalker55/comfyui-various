@@ -198,23 +198,26 @@ class _:
         if_durations_differ: Literal["use_longest", "use_shortest"],
         if_samplerates_differ: Literal["use_highest", "use_lowest"],
     ) -> tuple[Audio]:
-        import librosa
-
         # shallow clone audios
         a = {**a}
         b = {**b}
 
-        # # if they have different batch size, attempt to resolve them
-        # if a["waveform"].shape[0] != b["waveform"].shape[0]:
-        #     pass
-
         # if they have different channels, attempt to resolve them
         if a["waveform"].shape[1] != b["waveform"].shape[1]:
             # if one of them is mono, distribute it
+            # CORRECCIÓN 1: expandir a 3 dimensiones (-1, canales_destino, -1)
             if a["waveform"].shape[1] == 1:
-                a["waveform"] = a["waveform"].expand(-1, b["waveform"].shape[1])
+                a["waveform"] = a["waveform"].expand(-1, b["waveform"].shape[1], -1)
             elif b["waveform"].shape[1] == 1:
-                b["waveform"] = b["waveform"].expand(-1, a["waveform"].shape[1])
+                b["waveform"] = b["waveform"].expand(-1, a["waveform"].shape[1], -1)
+            # else:
+            #     # Si ninguna es mono pero tienen diferentes canales (ej. 5.1 vs stereo),
+            #     # se necesitaría una lógica más compleja de conversión de canales.
+            #     # Por ahora, se asume que solo se expande mono a multi-canal.
+            #     raise ValueError(
+            #         f"Cannot blend audios with different channel counts if neither is mono: A: {a['waveform'].shape[1]}, B: {b['waveform'].shape[1]}"
+            #     )
+
 
         # ensure audio has same sample rate
         if a["sample_rate"] != b["sample_rate"]:
@@ -235,6 +238,9 @@ class _:
                 b["waveform"] = torchaudio.functional.resample(
                     b["waveform"], b["sample_rate"], sr
                 )
+        else:
+            sr = a["sample_rate"] # Ambos tienen el mismo sample rate, usar cualquiera.
+
 
         # ensure input has same length
         if a["waveform"].shape[-1] != b["waveform"].shape[-1]:
@@ -246,16 +252,18 @@ class _:
             else:
                 raise NotImplementedError(if_samplerates_differ)
 
+            # CORRECCIÓN 2: Lógica correcta para recortar o rellenar la forma de onda
             def waveform_with_duration(wave: torch.Tensor, new_duration: int):
                 batch, channels, original_duration = wave.shape
                 if original_duration >= new_duration:
-                    return wave[:, :, new_duration]
+                    return wave[:, :, :new_duration] # Recortar a la nueva duración
                 else:
-                    rv = torch.zeros(batch, channels, new_duration)
-                    rv[:, :, original_duration] = wave[:, :, original_duration]
+                    # Rellenar con ceros. Importante: asegurar el mismo dispositivo y tipo de dato.
+                    rv = torch.zeros(batch, channels, new_duration, device=wave.device, dtype=wave.dtype)
+                    rv[:, :, :original_duration] = wave # Copiar la onda original al inicio
                     return rv
 
-            # do the chopping
+            # do the chopping/padding
             if a["waveform"].shape[-1] != duration:
                 a["waveform"] = waveform_with_duration(a["waveform"], duration)
             if b["waveform"].shape[-1] != duration:
@@ -263,7 +271,8 @@ class _:
 
         rv: Audio = {
             "sample_rate": sr,
-            "waveform": a["waveform"] * (1.0 - ratio) + a["waveform"] * ratio,
+            # CORRECCIÓN 3: Fórmula de blending correcta (mezcla a con b)
+            "waveform": a["waveform"] * (1.0 - ratio) + b["waveform"] * ratio,
         }
 
         return (rv,)
