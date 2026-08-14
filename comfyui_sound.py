@@ -217,6 +217,7 @@ class _:
                 b["waveform"] = b["waveform"].expand(-1, a["waveform"].shape[1])
 
         # ensure audio has same sample rate
+        sr = a["sample_rate"]
         if a["sample_rate"] != b["sample_rate"]:
             # determine which rate to use
             if if_samplerates_differ == "use_highest":
@@ -237,6 +238,7 @@ class _:
                 )
 
         # ensure input has same length
+        duration = a["waveform"].shape[-1]
         if a["waveform"].shape[-1] != b["waveform"].shape[-1]:
             # determine which duration to use
             if if_durations_differ == "use_longest":
@@ -249,10 +251,10 @@ class _:
             def waveform_with_duration(wave: torch.Tensor, new_duration: int):
                 batch, channels, original_duration = wave.shape
                 if original_duration >= new_duration:
-                    return wave[:, :, new_duration]
+                    return wave[:, :, :new_duration]
                 else:
                     rv = torch.zeros(batch, channels, new_duration)
-                    rv[:, :, original_duration] = wave[:, :, original_duration]
+                    rv[:, :, :original_duration] = wave[:, :, :original_duration]
                     return rv
 
             # do the chopping
@@ -263,7 +265,7 @@ class _:
 
         rv: Audio = {
             "sample_rate": sr,
-            "waveform": a["waveform"] * (1.0 - ratio) + a["waveform"] * ratio,
+            "waveform": a["waveform"] * (1.0 - ratio) + b["waveform"] * ratio,
         }
 
         return (rv,)
