@@ -696,14 +696,6 @@ class _:
             h_scaled = closest_resolution[0]
             w_scaled = max(round(closest_resolution[0] / h * w), 0)
 
-        scaled_deg = self.angle(w_scaled, h_scaled)
-        print(f"{[h, w] = }")
-        print(f"{closest_resolution = }")
-        print(f"{[h_scaled, w_scaled] = }")
-        print(f"{img_deg = }")
-        print(f"{target_deg = }")
-        print(f"{scaled_deg = }")
-
         image = image.permute(0, 3, 1, 2)
         image = F.resize(
             image,
