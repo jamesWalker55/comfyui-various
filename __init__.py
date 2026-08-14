@@ -15,7 +15,6 @@ NODE_MODULES = [
     ".comfyui_image_sequence",
     ".comfyui_mask_sequence_ops",
     ".comfyui_default",
-    ".comfyui_sound",
 ]
 
 # Extra nodes for my own use
@@ -33,6 +32,7 @@ if (
             ".comfyui_string_list",
             ".comfyui_uncrop",
             ".comfyui_rc",
+            ".comfyui_sound",
         ]
     )
 
