@@ -244,11 +244,6 @@ def _(text: str = "0") -> tuple[int]:
     return (int(text),)
 
 
-@generate_functional_node("jamesWalker55", "JWStringToInteger", "String to Integer (Base 16)")
-def _(text: str = "FFFFFF") -> tuple[int]:
-    return (int(text, base=16),)
-
-
 @generate_functional_node("jamesWalker55", "JWStringToFloat", "String to Float")
 def _(text: str = "0.0") -> tuple[float]:
     return (float(text),)
